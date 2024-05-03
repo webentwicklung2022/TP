@@ -49,7 +49,7 @@ router.get('/test',  (req, res) => {
             res.json(results);
         });
     } catch (error) {
-        console.error('Unbehandelter Fehle:', error);
+        console.error('Unbehandelter Fehler:', error);
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 
