@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test</title>
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <div class="logo" style="padding-top: 10px;"><a href=""><img src="../img/V2.png" alt=""
+            style="width: 50px; height:50px "></a></div>
+      <ul class="links">
+        <li><a href="./user-leaderboard"> <i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
+        <li><a href="about"><i class="fa-solid fa-list-ol"></i> Gruppen-Leaderboard</a></li>
+        <li><a href="services"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
+        <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
+      </ul>
+      <li><a href="#" class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</a></li>
+      <div class="toggle_btn"><i class="fa-solid fa-bars"></i></div>
+    </div>
+
+    <div class="dropdown_menu">
+      <li><a href="./user-leaderboard"> <i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
+      <li><a href="about"><i class="fa-solid fa-list-ol"></i> Gruppen-Leaderboard</a></li>
+      <li><a href="services"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
+      <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
+      <li><a href="#" class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</a></li>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero">
+      <h1>Welcome User</h1>
+      <p>
+        Lorem ipsum dolor sit amet consectetur <br> adipisicing elit. Sed, placeat.
+      </p>
+      <div class="spiel_plan" >
+        <div class="datum"><i id="icon" class="fa-solid fa-circle-left"></i> <p class="d">14.06.2024</p> <i id="icon" class="fa-solid fa-circle-right"></i></div>
+        <li>
+          <div class="home"><img class="home_img" src="../img/Flag_of_Germany_Flat_Round-64x64.png"><p class="home_name">Deutschland</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">10:00 pm</div><button  class="tippen_btn"  onclick="tippenPopup(0)" >Tippen</button></div> <div class="away"><img class="away_img" src="../img/Flag_of_France_Flat_Round-64x64.png" alt=""> <p class="away_name">Frankreich</p> </div>
+        </li>
+        
+        <li>
+          <div class="home"><img class="home_img" src="../img/Flag_of_Italy_Flat_Round-64x64.png"><p class="home_name">Italien</p> </div><div class="Uhrzeitundbtn"><div class="Uhrzeit">10:00 pm</div><button  class="tippen_btn"  onclick="tippenPopup(1)" >Tippen</button></div> <div class="away"><img class="away_img" src="../img/Flag_of_Spain_Flat_Round-64x64.png" alt=""> <p class="away_name">Spanien</p>  </div>
+        </li>
+        
+        <li>
+          <div class="home"><img class="home_img" src="../img/Flag_of_Portugal_Flat_Round-64x64.png"> <p class="home_name">Portugal</p></div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">10:00 pm</div><button  class="tippen_btn"  onclick="tippenPopup(2)" >Tippen</button></div> <div class="away"><img class="away_img" src="../img/Flag_of_Sweden_Flat_Round-64x64.png" alt=""> <p class="away_name">Schweden</p> </div>
+        </li>
+        
+
+      </div>
+
+
+    </section>
+    <div class="popup">
+      <div class="box">
+        <i id="X" class="fa-solid fa-xmark" onclick="displayNone()"></i>
+        <p class="erklärung">bitte geben Sie das Ergebins des Spiels ein</p>
+        <form class="box2" method="post" action="./index.html">
+         
+     
+
+        </form>
+        
+      </div>
+    </div>
+  </main>
+  <footer><small>&copy; Copyright 2024, Vincenzo, Lamanuzzi & Mahmoud, Khalaf</small></footer>
+  <script src="js/home.js"></script>
+</body>
+
+</html>

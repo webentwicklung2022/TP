@@ -1,0 +1,5 @@
+http://localhost:5050/abfrage/select%20*%20from%20spiele
+
+http://localhost:5050/abfrage/select%20*%20from%20karten
+
+http://localhost:5050/abfrage/select%20*%20from%20sets
