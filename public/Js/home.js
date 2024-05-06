@@ -42,6 +42,7 @@ const box2 =  document.querySelector(".box2");
 const home_name = document.getElementsByClassName("home_name");
 const away_name = document.getElementsByClassName("away_name");
 const datum = document.getElementsByClassName("d");
+const match_id = document.getElementsByClassName("match_id");
 const home_img = document.getElementsByClassName("home_img");
 const away_img = document.getElementsByClassName("away_img");
 
@@ -55,17 +56,18 @@ function tippenPopup(index){
   box2.innerHTML = "";
   box2.innerHTML += `
 
-          <input type="hidden" name="home_name" value="${home_name[index].innerHTML}">
+          <input type="hidden" name="home_team" value="${home_name[index].innerHTML}">
           <div class="home">
             <img src="${home_img[index].src}"> 
-            <p class="name">${home_name[index].innerHTML}</p> <input class="home_resualt" name="home_resualt" placeholder="Ergebnis" type="number" required>
+            <p class="name">${home_name[index].innerHTML}</p> <input class="home_resualt" name="home_score" placeholder="Ergebnis" type="number" required>
           </div>
-          <input type="hidden" name="away_name" value="${away_name[index].innerHTML}">
+          <input type="hidden" name="away_team" value="${away_name[index].innerHTML}">
            <div class="Uhrzeitundbtn"><button  class="tippen_btn2" type="submit" >Tippen</button></div>
             <div class="away">
-              <img src="${away_img[index].src}" alt=""><p class="name">${away_name[index].innerHTML}</p> <input class="away_resualt" name="away_resualt" placeholder="Ergebnis" type="number" required>
+              <img src="${away_img[index].src}" alt=""><p class="name">${away_name[index].innerHTML}</p> <input class="away_resualt" name="away_score" placeholder="Ergebnis" type="number" required>
             </div>
-            <input type="hidden" name="datum" value="${datum[0].innerHTML}">
+            <input type="hidden" name="match_date" value="${datum[0].innerHTML}">
+            <input type="hidden" name="match_id" class="match_id" value="${match_id[index].value}">
            
 
   

@@ -47,31 +47,6 @@ router.get('/teams-leaderboard', checkAuthenticated , (req, res) => {
 
 });
 
-router.get('/test',  (req, res) => {
-    try {
-        // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
-        const befehl = "select * from users";
-        console.log('Ausgeführter Befehl:', befehl);
-
-        // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
-        db.query(befehl, (error, results) => {
-            if (error) {
-                console.error('Fehler beim Abfragen der Daten:', error);
-                res.status(500).json({ error: 'Interner Serverfehler' });
-                return;
-            }
-
-            console.log('Daten erfolgreich abgefragt:', results);
-            // Sende die Ergebnisse als JSON.
-            res.json(results);
-        });
-    } catch (error) {
-        console.error('Unbehandelter Fehler:', error);
-        res.status(500).json({ error: 'Interner Serverfehler' });
-    }
-
-
-});
 
 router.get('/abfrage/:befehl/:werte', (req, res) => {
 
@@ -110,60 +85,26 @@ router.get('/abfrage/:befehl/:werte', (req, res) => {
     }
 });
 
+router.post('/tipp', checkAuthenticated , (req, res) => {
+
+    const user = decipher(req).split(',');
+    const user_Id = user[0];
+    const match_id = req.body.match_id;
+    const match_date = req.body.match_date;
+    const home_team = req.body.home_team;
+    const away_team = req.body.away_team;
+    const home_score = req.body.home_score;
+    const away_score = req.body.away_score;
+    const status = "offen";
+    const recive_date = "null";
+   console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date )
+    res.render("home");
 
 
-
-
-
- router.get('/set-user-id/:userId', (req, res) => {
-    // Benutzer-ID aus den URL-Parametern abrufen
-    const userId = req.params.userId;
-    const crypto = require('crypto');
-
-    const algorithm = 'aes-256-cbc';
-    const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel auf 32 Bytes vergrößern
-
-    // Initialisierungsvektor erzeugen
-    const iv = crypto.randomBytes(16);
-
-    // Text verschlüsseln
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    let encrypted = cipher.update(userId, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-
-    // Cookie mit der Benutzer-ID und IV setzen
-    res.cookie('user', encrypted, { maxAge: 900000, httpOnly: true, secure: true });
-    res.cookie('iv', iv.toString('hex'), { maxAge: 900000, httpOnly: true, secure: true });
-
-    // Bestätigungsnachricht senden
-    res.send(`Benutzer-ID ${encrypted} wurde erfolgreich im Cookie gespeichert.`);
 });
 
 
-router.get('/get-cookie', (req, res) => {
-    const crypto = require('crypto');
 
-    // Cookie mit dem Namen "userId" abrufen
-    const encryptedUser = req.cookies.pre;
-    const ivHex = req.cookies.iv;
-
-    // Überprüfen, ob das Cookie vorhanden ist
-    if (encryptedUser && ivHex) {
-        // Schlüssel und IV wiederherstellen
-        const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
-        const iv = Buffer.from(ivHex, 'hex');
-
-        // Text entschlüsseln
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
-        decrypted += decipher.final('utf8');
-
-        // Entschlüsselte Benutzer-ID im Response anzeigen
-        res.send(`Entschlüsselte Benutzer-ID: ${decrypted}`);
-    } else {
-        res.send('Cookie nicht gefunden');
-    }
-});
 
 
 function decipher(req){
