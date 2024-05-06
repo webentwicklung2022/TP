@@ -131,10 +131,9 @@ router.get('/pre', (req, res) => {
     encrypted += cipher.final('hex');
 
     // Cookie mit der Benutzer-ID und IV setzen
-    res.cookie('pre', encrypted, { maxAge: 900000, httpOnly: true, secure: true });
-    res.cookie('iv', iv.toString('hex'), { maxAge: 900000, httpOnly: true, secure: true });
-
-    // Bestätigungsnachricht senden
+    res.cookie('pre', encrypted, { maxAge: 900000, httpOnly: true});
+    res.cookie('iv', iv.toString('hex'), { maxAge: 900000, httpOnly: true});
+    
     res.redirect("/");
 });
 
@@ -150,8 +149,8 @@ router.delete('/logout', (req, res) => {
     req.logout(function(err) {
         if (err) { return next(err); }
 
-        res.cookie('pre', '', { expires: new Date(0), httpOnly: true, secure: true });
-        res.cookie('iv', '', { expires: new Date(0), httpOnly: true, secure: true });
+        res.cookie('pre', '', { expires: new Date(0), httpOnly: true });
+        res.cookie('iv', '', { expires: new Date(0), httpOnly: true});
         res.redirect('/login');
     });
 });

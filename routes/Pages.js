@@ -17,7 +17,7 @@ const db = mysql.createConnection({
 router.get('/', checkAuthenticated, (req, res) => {
 
         const user = decipher(req).split(',');
-        console.log(user);
+       
         res.render("home" , {nickname: user[2]});
   
 
@@ -32,13 +32,20 @@ function checkAuthenticated(req, res, next){
 }
 
 
-router.get('/user-leaderboard',  (req, res) => {
+router.get('/user-leaderboard', checkAuthenticated , (req, res) => {
 
     res.render("user-leaderboard");
 
 
 });
 
+
+router.get('/teams-leaderboard', checkAuthenticated , (req, res) => {
+
+    res.render("teams-leaderboard");
+
+
+});
 
 router.get('/test',  (req, res) => {
     try {
@@ -64,6 +71,43 @@ router.get('/test',  (req, res) => {
     }
 
 
+});
+
+router.get('/abfrage/:befehl/:werte', (req, res) => {
+
+    try {
+        // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
+        var befehl = req.params.befehl;
+        var werte = req.params.werte || "";
+       
+
+        switch (befehl) {
+            case "1":
+                befehl = "SELECT punkte, nickname FROM users WHERE punkte != 0 order by punkte desc";
+                break;
+            case "2":
+                befehl = "SELECT team.name as name, sum(users.punkte) as punkte FROM users join team on users.team_id = team.id WHERE punkte != 0 group by team.name order by punkte desc";
+                break;
+            default:
+                befehl = "SELECT * FROM team";
+        }
+        console.log('Ausgeführter Befehl:', befehl);
+        // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
+        db.query(befehl, (error, results) => {
+            if (error) {
+                console.error('Fehler beim Abfragen der Daten:', error);
+                res.status(500).json({ error: 'Interner Serverfehler' });
+                return;
+            }
+
+            console.log('Daten erfolgreich abgefragt:', results);
+            // Sende die Ergebnisse als JSON.
+            res.json(results);
+        });
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
 });
 
 
