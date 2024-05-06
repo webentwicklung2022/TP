@@ -74,3 +74,9 @@ function tippenPopup(index){
 
 
 }
+
+const logoutform = document.querySelector("#logout")
+
+function logout(){
+  logoutform.submit();
+}

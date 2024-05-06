@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/register.css">
     <title>Register</title>
 </head>
+
 <body>
-   
+
+
     <div class="container">
         <div class="curved-shape"></div>
         <div class="form-box Login">
             <h2>Registrieren </h2>
             <form action="/register" method="POST">
                 <div class="input-box">
-                    <input type="text" name="name" required>
-                    <label for="name">Benutzername</label>
-                    <i class='bx bx-user' ></i>
-                </div>
-                <div class="input-box">
-                    <input type="email" name="email" required>
                     <label for="email">E-Mail</label>
-                    <i class='bx bxs-envelope' ></i>
+                    <input type="email" name="email" required>
                 </div>
                 <div class="input-box">
-                    <input type="password" name="password" required>
                     <label for="passport">Password</label>
-                    <i class='bx bxs-lock-alt' ></i>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="input-box">
+                    <label for="teams">Teams</label>
+                    <select id="teams" name="team_id">
+                        <option value="3">Klinge</option>
+                        <option value="4">OTM</option>
+                        <option value="5">Rest</option>
+                    </select>   
+                </div>
+                <div class="input-box">
+                    <label for="name">nickname</label>
+                    <input type="text" name="nickname" required>
+                </div>
+                  <div class="input-box">
+                    <label for="vorname">Vorname</label>
+                    <input type="vorname" name="vorname" required>
+                </div>
+                  <div class="input-box">
+                    <label for="nachname">Nachname</label>
+                    <input type="nachname" name="nachname" required>
                 </div>
                 <div class="input-box">
                     <button class="btn" type="submit">Registrieren</button>
@@ -36,15 +51,12 @@
                     <p>Du hast bereits ein Account ? <a href="/login">Anmelden</a></p>
                 </div>
             </form>
- 
+
         </div>
         <h4>{{message}}</h4>
-        <div class="info-content Login">
-            <h2>Herzlich <br> <br> <span id="h2-info-content">Willkommen!</span></h2>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Praesentium, rem.</p>
-        </div>
     </div>
- 
+
     <script src="JS/register.js"></script>
 </body>
+
 </html>

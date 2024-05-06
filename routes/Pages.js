@@ -14,12 +14,22 @@ const db = mysql.createConnection({
 
 
 
-router.get('/',  (req, res) => {
+router.get('/', checkAuthenticated, (req, res) => {
 
-        res.render("home");
+        const user = decipher(req).split(',');
+        console.log(user);
+        res.render("home" , {nickname: user[2]});
   
 
 });
+
+function checkAuthenticated(req, res, next){
+    if(decipher(req) !== null){
+        return next()
+    }
+
+    res.redirect('/login')
+}
 
 
 router.get('/user-leaderboard',  (req, res) => {
@@ -54,7 +64,6 @@ router.get('/test',  (req, res) => {
     }
 
 
-
 });
 
 
@@ -79,7 +88,7 @@ router.get('/test',  (req, res) => {
     encrypted += cipher.final('hex');
 
     // Cookie mit der Benutzer-ID und IV setzen
-    res.cookie('userId', encrypted, { maxAge: 900000, httpOnly: true, secure: true });
+    res.cookie('user', encrypted, { maxAge: 900000, httpOnly: true, secure: true });
     res.cookie('iv', iv.toString('hex'), { maxAge: 900000, httpOnly: true, secure: true });
 
     // Bestätigungsnachricht senden
@@ -91,18 +100,18 @@ router.get('/get-cookie', (req, res) => {
     const crypto = require('crypto');
 
     // Cookie mit dem Namen "userId" abrufen
-    const encryptedUserId = req.cookies.userId;
+    const encryptedUser = req.cookies.pre;
     const ivHex = req.cookies.iv;
 
     // Überprüfen, ob das Cookie vorhanden ist
-    if (encryptedUserId && ivHex) {
+    if (encryptedUser && ivHex) {
         // Schlüssel und IV wiederherstellen
         const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
         const iv = Buffer.from(ivHex, 'hex');
 
         // Text entschlüsseln
         const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decrypted = decipher.update(encryptedUserId, 'hex', 'utf8');
+        let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
 
         // Entschlüsselte Benutzer-ID im Response anzeigen
@@ -111,6 +120,32 @@ router.get('/get-cookie', (req, res) => {
         res.send('Cookie nicht gefunden');
     }
 });
+
+
+function decipher(req){
+
+    const crypto = require('crypto');
+    // Cookie mit dem Namen "userId" abrufen
+    const encryptedUser = req.cookies.pre;
+    const ivHex = req.cookies.iv;
+
+    // Überprüfen, ob das Cookie vorhanden ist
+    if (encryptedUser && ivHex) {
+        // Schlüssel und IV wiederherstellen
+        const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
+        const iv = Buffer.from(ivHex, 'hex');
+
+        // Text entschlüsseln
+        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+        let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+
+        // Entschlüsselte Benutzer-ID im Response anzeigen
+       return decrypted;
+    } else {
+      return null;
+    }  
+}
 
 
   

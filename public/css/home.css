@@ -474,3 +474,7 @@ footer{
   box-shadow: 0px 1px 4px 2px  #0000004c;
   border-radius: 50%;
 }
+
+#logout{
+    display: none;
+}
