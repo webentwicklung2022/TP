@@ -74,7 +74,8 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
         const nachname = req.body.nachname;
 
         const selectQuery = "SELECT email FROM users WHERE email = ?";
-        const insertQuery = "INSERT INTO users (email, punkte, password, team_id, nickname, vorname, nachname) VALUES (?, ?, ?, ?, ?, ?, ? )";
+        const selectQuery2 = "SELECT nickname FROM users WHERE nickname = ?";
+        const insertQuery = "INSERT INTO users (email, punkte, password, team_id, nickname, vorname, nachname) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         console.log('Ausgeführter Befehl:', selectQuery);
 
@@ -83,19 +84,33 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
                 console.error('Fehler beim Abfragen der Daten:', error);
                 return res.status(500).send('Fehler beim Abfragen der Daten');
             }
-
             if (results.length > 0) {
-                return res.render("register", { message: "Benutzer bereits vorhanden" });
+                return res.render("register", { message: "Email bereits vorhanden" });
             }
 
-            db.query(insertQuery, [email, punkte, password, team_id, nickname, vorname, nachname], (error, results) => {
+            db.query(selectQuery2, [nickname], (error, results) => {
                 if (error) {
-                    console.error('Fehler beim Einfügen der Daten:', error);
-                    return res.status(500).send('Fehler beim Einfügen der Daten');
+                    console.error('Fehler beim Abfragen der Daten:', error);
+                    return res.status(500).send('Fehler beim Abfragen der Daten');
                 }
-                
-                console.log("Erfolgreich eingefügt");
-                res.redirect('/login');
+
+                if (results.length > 0) {
+                    return res.render("register", { message: "Nickname bereits vorhanden" });
+                }
+
+                if (nickname.length > 15) {
+                    return res.render("register", { message: "Nickname zu lang (Max 15 Zeichen)" });
+                }
+
+                db.query(insertQuery, [email, punkte, password, team_id, nickname, vorname, nachname], (error, results) => {
+                    if (error) {
+                        console.error('Fehler beim Einfügen der Daten:', error);
+                        return res.status(500).send('Fehler beim Einfügen der Daten');
+                    }
+
+                    console.log("Erfolgreich eingefügt");
+                    res.redirect('/login');
+                });
             });
         });
     } catch (error) {
@@ -103,6 +118,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
         res.status(500).send('Unbehandelter Fehler');
     }
 });
+
 
 
 
@@ -131,8 +147,8 @@ router.get('/pre', (req, res) => {
     encrypted += cipher.final('hex');
 
     // Cookie mit der Benutzer-ID und IV setzen
-    res.cookie('pre', encrypted, { maxAge: 900000, httpOnly: true});
-    res.cookie('iv', iv.toString('hex'), { maxAge: 900000, httpOnly: true});
+    res.cookie('pre', encrypted, { httpOnly: true});
+    res.cookie('iv', iv.toString('hex'), { httpOnly: true});
     
     res.redirect("/");
 });

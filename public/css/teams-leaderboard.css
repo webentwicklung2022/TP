@@ -15,6 +15,7 @@ body{
    1px 1px 4px rgba(0, 0, 0, 0.747),
    0 0 1em rgba(0, 0, 0, 0.747),
    0 0 0.2em rgba(0, 0, 0, 0.747);
+   position: relative;
 
 
 }
@@ -155,6 +156,9 @@ section#hero{
     font-size: 1rem;
     margin-bottom: 1rem;
 }
+#hero{
+position: relative;
+}
 
 
 /*Responsive*/
@@ -217,6 +221,7 @@ table {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 8px;
+    width: 33%;
   }
    
 
@@ -313,3 +318,62 @@ footer{
     text-align: center;
 
 }
+
+.listing{
+    position: absolute;
+    top:115px;
+    left: 10%;
+    width:80%;
+    height: 40px;
+    
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+    font-size: 1.1rem;
+    
+
+}
+
+#icon{
+    font-size: 1.7rem;
+    cursor: pointer;
+}
+
+@media(min-width: 576px){
+  
+    .listing{
+        position: absolute;
+        top:115px;
+        left: 30%;
+        width:40%;
+        height: 40px;
+       
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        text-align: center;
+        font-size: 1.1rem;
+    
+    }
+    .spiel_plan li{
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        
+        
+        }
+        .spiel_plan{
+           width: 70%;
+            
+            
+            }
+        
+
+    
+       
+       
+       }

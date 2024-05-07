@@ -16,15 +16,15 @@ const db = mysql.createConnection({
 
 router.get('/', checkAuthenticated, (req, res) => {
 
-        const user = decipher(req).split(',');
-       
-        res.render("home" , {nickname: user[2]});
-  
+    const user = decipher(req).split(',');
+
+    res.render("home", { nickname: user[2] });
+
 
 });
 
-function checkAuthenticated(req, res, next){
-    if(decipher(req) !== null){
+function checkAuthenticated(req, res, next) {
+    if (decipher(req) !== null) {
         return next()
     }
 
@@ -32,7 +32,7 @@ function checkAuthenticated(req, res, next){
 }
 
 
-router.get('/user-leaderboard', checkAuthenticated , (req, res) => {
+router.get('/user-leaderboard', checkAuthenticated, (req, res) => {
 
     res.render("user-leaderboard");
 
@@ -40,14 +40,14 @@ router.get('/user-leaderboard', checkAuthenticated , (req, res) => {
 });
 
 
-router.get('/teams-leaderboard', checkAuthenticated , (req, res) => {
+router.get('/teams-leaderboard', checkAuthenticated, (req, res) => {
 
     res.render("teams-leaderboard");
 
 
 });
 
-router.get('/tipp-history', checkAuthenticated , (req, res) => {
+router.get('/tipp-history', checkAuthenticated, (req, res) => {
 
     res.render("tipp-history");
 
@@ -59,9 +59,12 @@ router.get('/abfrage/:befehl/:werte', (req, res) => {
 
     try {
         // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
+
         var befehl = req.params.befehl;
         var werte = req.params.werte || "";
-       
+        const user = decipher(req).split(',');
+        const user_Id = user[0];
+
 
         switch (befehl) {
             case "1":
@@ -69,6 +72,9 @@ router.get('/abfrage/:befehl/:werte', (req, res) => {
                 break;
             case "2":
                 befehl = "SELECT team.name as name, sum(users.punkte) as punkte FROM users join team on users.team_id = team.id WHERE punkte != 0 group by team.name order by punkte desc";
+                break;
+            case "3":
+                befehl = "SELECT home_team, away_team, home_score, away_score, status from tipp where user_id =" + user_Id;
                 break;
             default:
                 befehl = "SELECT * FROM team";
@@ -92,7 +98,7 @@ router.get('/abfrage/:befehl/:werte', (req, res) => {
     }
 });
 
-router.post('/tipp', checkAuthenticated , (req, res) => {
+router.post('/tipp', checkAuthenticated, (req, res) => {
 
     try {
         const user = decipher(req).split(',');
@@ -105,8 +111,8 @@ router.post('/tipp', checkAuthenticated , (req, res) => {
         const away_score = req.body.away_score;
         const status = "offen";
         const recive_date = "null";
-        
-       console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date )
+
+        console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date)
 
         const selectQuery = "SELECT match_id FROM tipp WHERE match_id = ? and user_id = ?";
         const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
@@ -123,12 +129,12 @@ router.post('/tipp', checkAuthenticated , (req, res) => {
                 return res.render("home", { message: "Bereits getippt" });
             }
 
-            db.query(insertQuery, [user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ], (error, results) => {
+            db.query(insertQuery, [user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date], (error, results) => {
                 if (error) {
                     console.error('Fehler beim Einfügen der Daten:', error);
                     return res.status(500).send('Fehler beim Einfügen der Daten');
                 }
-                
+
                 console.log("Erfolgreich eingefügt");
                 res.redirect('/');
             });
@@ -145,7 +151,7 @@ router.post('/tipp', checkAuthenticated , (req, res) => {
 
 
 
-function decipher(req){
+function decipher(req) {
 
     const crypto = require('crypto');
     // Cookie mit dem Namen "userId" abrufen
@@ -164,14 +170,14 @@ function decipher(req){
         decrypted += decipher.final('utf8');
 
         // Entschlüsselte Benutzer-ID im Response anzeigen
-       return decrypted;
+        return decrypted;
     } else {
-      return null;
-    }  
+        return null;
+    }
 }
 
 
-  
+
 
 
 

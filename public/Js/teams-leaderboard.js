@@ -1,16 +1,9 @@
 
 
-
 async function fetchData() {
     try {
-        var url = "http://localhost:5050" 
-       
-        if(navigator.platform == "Win32"){
-            url = "http://localhost:5050";
-        }else{
-            url = "http://192.168.178.58:5050"; 
-        }
-      const response = await fetch(url + "/abfrage/2/null");
+        
+      const response = await fetch("/abfrage/2/null");
   
       if (!response.ok) {
         throw new Error('Network response was not ok');
