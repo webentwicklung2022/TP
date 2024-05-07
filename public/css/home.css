@@ -196,7 +196,7 @@ section#hero{
 /*Spiel-plan*/
 
 .spiel_plan{
-    margin-top: 140px;
+    margin-top: 180px;
     width: 90%;
     background: rgba(255, 255, 255, 0.1);  
     backdrop-filter: blur(5px);
@@ -477,4 +477,10 @@ footer{
 
 #logout{
     display: none;
+}
+
+main #hero #hinweis{
+    color: orange;  
+    font-weight: bold;
+   
 }

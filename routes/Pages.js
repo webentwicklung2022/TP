@@ -47,6 +47,13 @@ router.get('/teams-leaderboard', checkAuthenticated , (req, res) => {
 
 });
 
+router.get('/tipp-history', checkAuthenticated , (req, res) => {
+
+    res.render("tipp-history");
+
+
+});
+
 
 router.get('/abfrage/:befehl/:werte', (req, res) => {
 
@@ -87,18 +94,49 @@ router.get('/abfrage/:befehl/:werte', (req, res) => {
 
 router.post('/tipp', checkAuthenticated , (req, res) => {
 
-    const user = decipher(req).split(',');
-    const user_Id = user[0];
-    const match_id = req.body.match_id;
-    const match_date = req.body.match_date;
-    const home_team = req.body.home_team;
-    const away_team = req.body.away_team;
-    const home_score = req.body.home_score;
-    const away_score = req.body.away_score;
-    const status = "offen";
-    const recive_date = "null";
-   console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date )
-    res.render("home");
+    try {
+        const user = decipher(req).split(',');
+        const user_Id = user[0];
+        const match_id = req.body.match_id;
+        const match_date = req.body.match_date;
+        const home_team = req.body.home_team;
+        const away_team = req.body.away_team;
+        const home_score = req.body.home_score;
+        const away_score = req.body.away_score;
+        const status = "offen";
+        const recive_date = "null";
+        
+       console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date )
+
+        const selectQuery = "SELECT match_id FROM tipp WHERE match_id = ? and user_id = ?";
+        const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
+
+        console.log('Ausgeführter Befehl:', selectQuery);
+
+        db.query(selectQuery, [match_id, user_Id], (error, results) => {
+            if (error) {
+                console.error('Fehler beim Abfragen der Daten:', error);
+                return res.status(500).send('Fehler beim Abfragen der Daten');
+            }
+
+            if (results.length > 0) {
+                return res.render("home", { message: "Bereits getippt" });
+            }
+
+            db.query(insertQuery, [user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ], (error, results) => {
+                if (error) {
+                    console.error('Fehler beim Einfügen der Daten:', error);
+                    return res.status(500).send('Fehler beim Einfügen der Daten');
+                }
+                
+                console.log("Erfolgreich eingefügt");
+                res.redirect('/');
+            });
+        });
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).send('Unbehandelter Fehler');
+    }
 
 
 });

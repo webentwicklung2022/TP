@@ -1,6 +1,14 @@
 // var container = document.getElementsByClassName("container");
 
+const hinweis = document.querySelector("#hinweis");
 
+
+if(hinweis.innerHTML.trim() !== ""){
+  setTimeout(() => {
+    // Innerhalb der setTimeout-Funktion solltest du keine direkte Rückgabe verwenden
+  location.href = "/";
+}, 1000); // 1000 Millisekunden = 1 Sekunden
+}
 // async function fetchData() {
 //     try {
 //       const response = await fetch("http://livescore-api.com/api-client/fixtures/matches.json?date=2024-06-15&key=eESdFyPgAH1H63rX&secret=170vScq0DTsav9lJNeWtMLJmtL3zOvxP&competition_id=387");

@@ -20,7 +20,7 @@
       <ul class="links">
         <li><a href="./user-leaderboard"> <i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
         <li><a href="./teams-leaderboard"><i class="fa-solid fa-list-ol"></i> Gruppen-Leaderboard</a></li>
-        <li><a href="services"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
+        <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
         <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
       </ul>
       <li><form id="logout" action="/logout?_method=DELETE" method="POST">
@@ -34,7 +34,7 @@
     <div class="dropdown_menu">
       <li><a href="./user-leaderboard"> <i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
       <li><a href="./teams-leaderboard"><i class="fa-solid fa-list-ol"></i> Gruppen-Leaderboard</a></li>
-      <li><a href="services"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
+      <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
       <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
       <li><form id="logout" action="/logout?_method=DELETE" method="POST">
     <button type="submit">Logout</button>
@@ -46,8 +46,8 @@
   <main>
     <section id="hero">
       <h1>Welcome {{nickname}}</h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur <br> adipisicing elit. Sed, placeat.
+      <p id="hinweis">
+        {{message}}
       </p>
       <div class="spiel_plan" >
         <div class="datum"><i id="icon" class="fa-solid fa-circle-left"></i> <p class="d">14.06.2024</p> <i id="icon" class="fa-solid fa-circle-right"></i></div>
