@@ -40,14 +40,14 @@ body{
   background: rgba(255, 255, 255, 0.1);  
   backdrop-filter: blur(5px);
   width: 90%;
-  padding: 10px;
+  padding: 5px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
   text-align: center;
-  gap: 20px;
+  gap: 5px;
 }
 
 .input-box{
@@ -132,10 +132,14 @@ input::placeholder{
       .form-box{
          width: 40%;
           
+         margin-top: 7%;
           
-          }
+        }
 
-       
+
+  #form{
+    width: 60%  
+  }
     
       
 
@@ -224,6 +228,7 @@ input::placeholder{
           animation-fill-mode: forwards;
   -webkit-animation-timing-function: step-start;
           animation-timing-function: step-start;
+   transition-duration: .4s;       
   box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
 }
 .select-box__option {
@@ -231,6 +236,7 @@ input::placeholder{
   padding: 15px;
   background-color: #fff;
   color: #111;
+  
 }
 .select-box__option:hover, .select-box__option:focus {
   color: #546c84;

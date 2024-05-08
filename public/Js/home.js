@@ -9,27 +9,113 @@ if(hinweis.innerHTML.trim() !== ""){
   location.href = "/";
 }, 1000); // 1000 Millisekunden = 1 Sekunden
 }
-// async function fetchData() {
-//     try {
-//       const response = await fetch("http://livescore-api.com/api-client/fixtures/matches.json?date=2024-06-15&key=eESdFyPgAH1H63rX&secret=170vScq0DTsav9lJNeWtMLJmtL3zOvxP&competition_id=387");
-  
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-  
-  
-  
-//       const data = await response.json();
-//       // Hier kannst du mit den geladenen Daten arbeiten
+
+var dates = ['14.06.2024', '15.06.2024', '16.06.2024', '17.06.2024', '18.06.2024', '19.06.2024', '20.06.2024', '21.06.2024', '22.06.2024', '23.06.2024', '24.06.2024', '25.06.2024', '26.06.2024']
+var index = 0;
+var date = dates[index];
+
+function schalter(richtung){
+
+  if(richtung == "rechts"){
+    if(index < 12){
+      index++;
+      date = dates[index]
+    }else{
+      return
+    }
    
-//       console.log(data);
-//     } catch (error) {
-//       console.error('Fetch error:', error);
-//     }
-//   }
+
+  }else{
+    if(index > 0){
+      index--;
+      date = dates[index]
+    }else{
+      return
+    }
+   
+  }
+
+
+  fetchData()
+}
+
+async function fetchData() {
+    try {
+      const response = await fetch("/abfrage/4/" + date);
   
-//   // Aufruf der Funktion
-//   fetchData();
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+  
+  
+      const data = await response.json();
+      // Hier kannst du mit den geladenen Daten arbeiten
+      datenEinfuegen(data)
+      console.log(data);
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  }
+  
+ 
+  fetchData();
+
+const spiel_plan = document.querySelector(".spiel_plan")
+
+  function datenEinfuegen(data){
+    spiel_plan.innerHTML =`<div class="datum"><i id="icon" onclick="schalter('links')" class="fa-solid fa-circle-left"></i> <p class="d">${data[0].date}</p> <i id="icon" onclick="schalter('rechts')" class="fa-solid fa-circle-right"></i></div>`;
+   for(var x = 0; x < data.length; x++){
+    spiel_plan.innerHTML += `
+    <li>
+          <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">${data[x].time.substring(0, 5)} Uhr</div><button  class="tippen_btn"  onclick="tippenPopup(${x})" >Tippen</button></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
+        </li>
+    `
+
+
+   }
+  }
+
+
+  const flags = [
+    { name: "deutschland", url: "../img/flaggen/deutschland.png" },
+    { name: "albanien", url: "../img/flaggen/albanien.png" },
+    { name: "belgien", url: "../img/flaggen/belgien.png" },
+    { name: "danemark", url: "../img/flaggen/danemark.png" },
+    { name: "england", url: "../img/flaggen/england.png" },
+    { name: "frankreich", url: "../img/flaggen/frankreich.png" },
+    { name: "georgien", url: "../img/flaggen/georgien.png" },
+    { name: "italien", url: "../img/flaggen/italien.png" },
+    { name: "kroatien", url: "../img/flaggen/kroatien.png" },
+    { name: "niederlande", url: "../img/flaggen/niederlande.png" },
+    { name: "osterreich", url: "../img/flaggen/osterreich.png" },
+    { name: "polen", url: "../img/flaggen/polen.png" },
+    { name: "portugal", url: "../img/flaggen/portugal.png" },
+    { name: "rumanien", url: "../img/flaggen/rumanien.png" },
+    { name: "schottland", url: "../img/flaggen/schottland.png" },
+    { name: "schweiz", url: "../img/flaggen/schweiz.png" },
+    { name: "serbien", url: "../img/flaggen/serbien.png" },
+    { name: "slowakei", url: "../img/flaggen/slowakei.png" },
+    { name: "slowenien", url: "../img/flaggen/slowenien.png" },
+    { name: "spanien", url: "../img/flaggen/spanien.png" },
+    { name: "tschechien", url: "../img/flaggen/tschechien.png" },
+    { name: "turkei", url: "../img/flaggen/turkei.png" },
+    { name: "ukraine", url: "../img/flaggen/ukraine.png" },
+    { name: "ungarn", url: "../img/flaggen/ungarn.png" }
+  ];
+  
+  function nameToFlag(name) {
+    for (var x = 0; x < flags.length; x++) {
+        if (flags[x].name.toLowerCase() === name.toLowerCase()) {
+            return flags[x].url;
+        }
+    }
+    return "Nicht gefunden";
+  }
+
+  function GroßSchreiben(name){
+   return  name.charAt(0).toUpperCase() + name.slice(1);
+  }
 
 const toggleBtn = document.querySelector(".toggle_btn");
 const toggleBtnIcon = document.querySelector(".toggle_btn i");

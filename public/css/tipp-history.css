@@ -313,3 +313,7 @@ footer{
     text-align: center;
 
 }
+
+#logout{
+    display: none;
+}

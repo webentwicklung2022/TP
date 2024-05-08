@@ -109,5 +109,8 @@ function nameToFlag(name) {
 console.log(nameToFlag("frankreich"))
 
 
+const logoutform = document.querySelector("#logout")
 
-
+function logout(){
+  logoutform.submit();
+}

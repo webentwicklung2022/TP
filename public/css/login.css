@@ -131,10 +131,14 @@ input::placeholder{
       }
       .form-box{
          width: 40%;
-          
+          margin-top: 10%;
           
           }
 
+
+    #form{
+      width: 60%  
+    }
        
     
       

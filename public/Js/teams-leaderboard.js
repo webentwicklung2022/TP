@@ -64,5 +64,8 @@ for(var i = 0; i < data.length; i++){
 }
 
 
+const logoutform = document.querySelector("#logout")
 
-
+function logout(){
+  logoutform.submit();
+}

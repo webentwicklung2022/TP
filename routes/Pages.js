@@ -55,7 +55,7 @@ router.get('/tipp-history', checkAuthenticated, (req, res) => {
 });
 
 
-router.get('/abfrage/:befehl/:werte',checkAuthenticated, (req, res) => {
+router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
 
     try {
         // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
@@ -65,7 +65,7 @@ router.get('/abfrage/:befehl/:werte',checkAuthenticated, (req, res) => {
         const user = decipher(req).split(',');
         const user_Id = user[0];
 
-
+        console.log(werte)
         switch (befehl) {
             case "1":
                 befehl = "SELECT punkte, nickname FROM users WHERE punkte != 0 order by punkte desc";
@@ -75,6 +75,9 @@ router.get('/abfrage/:befehl/:werte',checkAuthenticated, (req, res) => {
                 break;
             case "3":
                 befehl = "SELECT home_team, away_team, home_score, away_score, status from tipp where user_id =" + user_Id;
+                break;
+            case "4":
+                befehl = "SELECT id, home_name, away_name, date, time from spiele where date = '" + werte + "'";
                 break;
             default:
                 befehl = "SELECT * FROM team";

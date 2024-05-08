@@ -23,7 +23,11 @@
         <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
         <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
       </ul>
-      <li><a href="#" class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</a></li>
+      <li><form id="logout" action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Logout</button>
+</form>
+        <button  onclick="logout()"  class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</button>
+        </li>
       <div class="toggle_btn"><i class="fa-solid fa-bars"></i></div>
     </div>
 
@@ -32,7 +36,10 @@
       <li><a href="./teams-leaderboard"><i class="fa-solid fa-list-ol"></i> Gruppen-Leaderboard</a></li>
       <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
       <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
-      <li><a href="#" class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</a></li>
+     <li><form id="logout" action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Logout</button>
+</form>
+        <button  onclick="logout()"  class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</button></li>
     </div>
   </header>
   <main>
