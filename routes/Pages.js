@@ -55,7 +55,7 @@ router.get('/tipp-history', checkAuthenticated, (req, res) => {
 });
 
 
-router.get('/abfrage/:befehl/:werte', (req, res) => {
+router.get('/abfrage/:befehl/:werte',checkAuthenticated, (req, res) => {
 
     try {
         // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.

@@ -126,7 +126,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
 router.post('/login' ,passport.authenticate('local', {
     successRedirect: '/pre',
     failureRedirect: '/login',
-    failureFlash: true,
+    failureFlash: ' E-mail oder password ist falsch.',
     successFlash: 'Login successful!'
 }));
 

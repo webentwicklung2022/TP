@@ -20,3 +20,288 @@ body{
   color: #fff;
 
 }
+.logo{
+  margin-top: 10px;
+  width: 70px; 
+  height:70px
+}
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  text-align: center;
+  color: #fff;
+  gap: 30px;
+}
+
+
+.form-box{
+  background: rgba(255, 255, 255, 0.1);  
+  backdrop-filter: blur(5px);
+  width: 90%;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  text-align: center;
+  gap: 20px;
+}
+
+.input-box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  position: relative;
+  margin-bottom: 25px;
+  width: 100%;
+}
+label{
+  text-align: left;
+  width: 100%;
+  color: #fff;
+  text-shadow: none;
+  
+}
+
+input{
+  color: #fff;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 35px;
+  text-align: center;
+  background: none;  
+  border-bottom: 2px solid #fff;
+  font-size: 1rem ;
+  border-radius: 2px;
+  height: 40px;
+}
+
+input::placeholder{
+  color: #fff;
+  text-align: left;
+ 
+}
+
+.btn{
+  background-color: #e60000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: scale .2 ease;
+  width: 100%;
+  height: 35px;
+}
+
+
+.link{
+  text-decoration: none;
+  font-size: 1rem;
+  color: #e60000;
+  text-shadow: none;
+  font-weight: bolder;
+}
+
+
+.ueberschrift{
+  margin-top: 20px;
+}
+
+
+
+@media(min-width: 992px){
+  
+
+  .spiel_plan li{
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      
+      
+      }
+      .form-box{
+         width: 40%;
+          
+          
+          }
+
+       
+    
+      
+
+  
+     
+     
+     }
+
+
+
+
+/*DropDown*/
+
+
+.select-box {
+  margin-top: 10px;
+  position: relative;
+  display: block;
+  width: 100%;
+  font-size: 18px;
+  color: #000000;
+  text-shadow: none;
+  background-color: #fff;
+  border-radius: 1px;
+  font-size: 1rem;
+}
+
+.select-box__current {
+  position: relative;
+  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  outline: none;
+}
+.select-box__current:focus + .select-box__list {
+  opacity: 1;
+  -webkit-animation-name: none;
+          animation-name: none;
+}
+.select-box__current:focus + .select-box__list .select-box__option {
+  cursor: pointer;
+}
+.select-box__current:focus .select-box__icon {
+  -webkit-transform: translateY(-50%) rotate(180deg);
+          transform: translateY(-50%) rotate(180deg);
+}
+.select-box__icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 20px;
+  opacity: 0.3;
+  transition: 0.2s ease;
+}
+.select-box__value {
+  display: flex;
+}
+.select-box__input {
+  display: none;
+}
+.select-box__input:checked + .select-box__input-text {
+  display: block;
+}
+.select-box__input-text {
+  display: none;
+  width: 100%;
+  margin: 0;
+  padding: 15px;
+
+}
+.select-box__list {
+  z-index: 50;
+  position: absolute;
+  width: 100%;
+  padding: 0;
+  list-style: none;
+  opacity: 0;
+  -webkit-animation-name: HideList;
+          animation-name: HideList;
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-delay: 0.5s;
+          animation-delay: 0.5s;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+  -webkit-animation-timing-function: step-start;
+          animation-timing-function: step-start;
+  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+}
+.select-box__option {
+  display: block;
+  padding: 15px;
+  background-color: #fff;
+  color: #111;
+}
+.select-box__option:hover, .select-box__option:focus {
+  color: #546c84;
+  background-color: #fbfbfb;
+}
+
+@-webkit-keyframes HideList {
+  from {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+  }
+  to {
+    -webkit-transform: scaleY(0);
+            transform: scaleY(0);
+  }
+}
+
+@keyframes HideList {
+  from {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+  }
+  to {
+    -webkit-transform: scaleY(0);
+            transform: scaleY(0);
+  }
+}
+
+
+footer{
+  width: 100%;
+  height: 10%;
+  background: rgba(255, 255, 255, 0.1);  
+  backdrop-filter: blur(5px);
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+
+}
+
+#i{
+  position: absolute;
+  font-size: 1.2rem;
+  right: 1%;
+  top: 20%;
+  text-shadow: none;
+}
+
+#ip{
+  position: absolute;
+  font-size: 1.2rem;
+  right: 1%;
+  top: 20%;
+  text-shadow: none;
+  z-index: 40;
+ 
+}
+
+#it{
+  position: absolute;
+  font-size: 1.2rem;
+  right: 1%;
+  top: 0%;
+  text-shadow: none;
+}
+
+#hinweis {
+  color: orange;
+  text-shadow: none;
+}
