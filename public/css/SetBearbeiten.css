@@ -1,0 +1,352 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+
+
+body, html {
+    height: 100%;
+    width: 100%;
+    background-color: aqua;
+    overflow: hidden;
+    font-family: Arial;
+}
+
+h1{
+    color: white;
+}
+
+#UEBerschrift{
+    margin-top: 2%;
+    color: rgb(0, 0, 0);
+    font-size: 4vh;
+    text-align: center;
+}
+
+nav{
+    background-color: #111111;
+    
+    padding: 30px 60px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 5px;
+}
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav li {
+    list-style: none;
+}
+
+nav li a {
+   
+   text-decoration: none;
+   font-weight: bold;
+   padding: 5px 8px;
+   color: #ffffff;
+}
+
+nav li a:hover {
+    color: #f7ce00;
+    text-decoration: none;
+ 
+ }
+
+
+
+
+#SetsContainer {
+    position: relative;
+    
+    width: 100vw;
+    /*margin-top: 5%;
+    margin-left: 5%; */
+    height: 100vh;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+#Spiele {
+    /*
+    background-color: aqua;
+    */
+    width: 90vw;
+    margin-top: 5%;
+    margin-left: 5%;
+    height: 60vh;
+
+    text-align: center;
+    
+}
+
+ .Set{
+    display: inline-block;
+
+    margin: 1%;
+
+    margin-top: 5%;
+
+    border-radius: 10px;
+    box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.175);
+
+    height: 20%;
+    width: 20%;
+
+    border: 1px solid;
+
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+
+
+} 
+
+
+
+
+
+
+.Set:active {
+
+    transform: scale(0.95);
+}
+
+
+
+
+.SetUeberschrift{
+
+    
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+p{
+    font-size: 3vh;
+}
+
+
+.loeschen {
+    position: absolute;
+    right: 2%;
+    top: 2%;
+}
+
+.loeschen:hover{
+    color: red;
+}
+
+.bearbeiten {
+    position: absolute;
+    right: 12%;
+    top: 2%;
+}
+
+.bearbeiten:hover{
+    color: rgb(81, 0, 255);
+}
+
+
+
+#hinzufuegen{
+    border: dashed; /* Breite und Stil des Rahmens festlegen */
+    
+}
+
+
+  #Popup {
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 30vh;
+    width: 70vh;
+    background-color: grey;
+    display: none;
+    /* display: block; */
+    border-radius: 10px;
+} 
+
+.popupÜberschrift{
+
+    text-align: center;
+    margin-top: 6%;
+
+}
+
+#löschenDiv{
+    
+    position: absolute;
+    left: 8%;
+    top: 40%;
+
+    height: 7vh;
+    width: 12vw;
+    text-align: center;
+    border: red solid;
+    cursor: pointer;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+
+#abbrechenDiv{
+    position: absolute;
+    
+
+    right: 8%;
+    top: 40%;
+    text-align: center;
+
+    height: 7vh;
+    width: 12vw;
+    border: green solid;
+    background-color: green;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+} 
+
+
+
+
+#abbrechenDiv:active {
+
+    transform: scale(0.95);
+}
+#löschenDiv:active {
+
+    transform: scale(0.95);
+}
+
+
+#PopupArtVomQuiz{
+
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 30vh;
+    width: 70vh;
+    background-color: grey;
+    display: none;
+    /* display: block; */
+    border-radius: 10px;
+
+}
+
+
+
+
+#FormDivPopup{
+
+    position: relative;
+
+    height: 30%;
+    /* background-color: #f7ce00; */
+    
+
+    
+}
+
+.form-check{
+    display: inline-block;
+    margin-top: 4%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+
+.form-check-input {
+    width: 2vw;
+    height: 2vh;
+}
+
+.form-check-label {
+    font-size: 2vw;
+}
+
+.popupÜberschriftText{
+    font-size: 2vw;
+}
+
+
+
+#erstellenOderAbbrechenDiv{
+    /* background-color: chartreuse; */
+    height: 40%;
+
+}
+
+
+#erstellenDiv{
+    
+    position: absolute;
+    left: 8%;
+    top: 60%;
+
+    height: 7vh;
+    width: 12vw;
+    text-align: center;
+    
+    cursor: pointer;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border: green solid;
+    background-color: green;
+}
+
+
+#abbrechenDiv2{
+    position: absolute;
+    
+
+    right: 8%;
+    top: 60%;
+    text-align: center;
+    border: red solid;
+    height: 7vh;
+    width: 12vw;
+    background-color: red;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+} 
+
+
+
+
+#abbrechenDiv2:active {
+
+    transform: scale(0.95);
+}
+#erstellenDiv:active {
+
+    transform: scale(0.95);
+}
