@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>contact</title>
+  <link rel="stylesheet" href="/css/contact.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <div class="logo" style="padding-top: 10px;"><a href=""><img src="../img/V2.png" alt=""
+            style="width: 50px; height:50px "></a></div>
+      <ul class="links">
+        <li><a href="./"> <i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="./user-leaderboard"> <i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
+        <li><a href="./teams-leaderboard"><i class="fa-solid fa-list-ol"></i> Teams-Leaderboard</a></li>
+        <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
+        
+      </ul>
+      <li><form id="logout" action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Logout</button>
+</form>
+        <button  onclick="logout()"  class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</button>
+        </li>
+      <div class="toggle_btn"><i class="fa-solid fa-bars"></i></div>
+    </div>
+
+    <div class="dropdown_menu">
+        <li><a href="./"> <i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="./user-leaderboard"> <i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
+      <li><a href="./teams-leaderboard"><i class="fa-solid fa-list-ol"></i> Gruppen-Leaderboard</a></li>
+      <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
+      <li><form id="logout" action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Logout</button>
+</form>
+        <button  onclick="logout()"  class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</button></li>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero">
+      <h1></h1>
+      <p id="hinweis">
+        {{msg}}
+      </p>
+      <div class="contact-box" >
+        <div class="card">
+  <span class="title">Kontaktformular </span>
+  <form class="form" action="/contact" method="post">
+    <div class="group">
+    <input placeholder="‎" type="text" name="name" required="">
+    <label for="name">Name</label>
+    <img class="i"  src="icons/user.svg" alt="">
+    </div>
+<div class="group">
+    <input placeholder="‎" type="email" id="email" name="email" required="">
+    <label for="email">Email</label>
+    <img class="i" src="icons/mail.svg" alt="">
+    </div>
+<div class="group">
+    <textarea placeholder="‎" maxlength="500" id="comment" name="comment" rows="5" required=""></textarea>
+    <label for="comment">Kommentare</label>
+    <img class="i" src="icons/comment.svg" alt="">
+</div>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+      </div>
+
+
+    </section>
+  </main>
+  <footer><small>&copy; Copyright 2024, Vincenzo, Lamanuzzi & Mahmoud, Khalaf</small></footer>
+  <script src="js/contact.js"></script>
+</body>
+
+</html>

@@ -2,179 +2,218 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "poppins";
-    color: #fff;
+    font-family: sans-serif;
+   
 }
+
 body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: red;
-    background: #25252b;
+   height: 100vh;
+   background-color: #000;
+   background-image: url("../img/bg-05.jpg");
+   background-size: cover;
+   background-position: center;
+   position: relative;
+   text-shadow:
+   1px 1px 4px rgba(0, 0, 0, 0.747),
+   0 0 1em rgba(0, 0, 0, 0.747),
+   0 0 0.2em rgba(0, 0, 0, 0.747);
+  color: #fff;
+
+}
+.logo{
+  margin-top: 10px;
+  width: 70px; 
+  height:70px
 }
 .container{
-    position: relative;
-    width: 750px;
-    height: 450px;
-    border: 2px solid #ff2770;
-    box-shadow: 0 0 25px #ff2770;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  text-align: center;
+  color: #fff;
+  gap: 30px;
 }
-.container .form-box{
-    position: absolute;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+
+
+.form-box{
+  background: rgba(255, 255, 255, 0.1);  
+  backdrop-filter: blur(5px);
+  width: 90%;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  text-align: center;
+  gap: 20px;
 }
-.form-box.Login{
-    left: 0;
-    padding: 0 40px;
+
+.input-box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  position: relative;
+  margin-bottom: 25px;
+  width: 100%;
 }
-.form-box h2{
-    font-size: 32px;
-    text-align: center;
+label{
+  text-align: left;
+  width: 100%;
+  color: #fff;
+  text-shadow: none;
+  
 }
-.form-box .input-box{
-    position: relative;
-    width: 100%;
-    height: 50px;
-    margin-top: 25px;
+
+input{
+  color: #fff;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 35px;
+  text-align: center;
+  background: none;  
+  border-bottom: 2px solid #fff;
+  font-size: 1rem ;
+  
+  height: 40px;
+  transition-duration: 500ms;
+}
+
+input::placeholder{
+  color: #fff;
+  text-align: left;
  
 }
-.input-box input{
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: transparent;
-    outline: none;
-    font-size: 16px;
-    color: #fff;
-    font-weight: 600;
-    border-bottom: 2px solid #fff;
-    padding-right: 23px;
-}
+
+input:focus {
+  border-bottom: 2px solid #e60000;
  
-.input-box label{
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #fff;
-    transition: .5s;
-    transition: .5s;
+
 }
-.input-box input:focus ~ label,
-.input-box input:valid ~ label{
-    top: -5px;
-    color: #ff2770;
-   
-}
-.input-box input:focus ,
-.input-box input:valid {
-    border-bottom: 2px solid #ff2770;
-   
-}
-.input-box i{
-    position: absolute;
-    top: 50%;
-    right: 0;
-    font-size: 18px;
-    transform: translateY(-50%);
-    transition: .5s;
-}
- 
-.input-box input:focus ~ i,
-.input-box input:valid ~ i{
- 
-    color: #ff2770;
-}
+
 .btn{
-    position: relative;
-    width: 100%;
-    height: 45px;
-    background: transparent;
-    border-radius: 40px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    border: 2px solid #ff2770;
-    overflow: hidden;
-    z-index: 1;
+  background-color: #e60000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: scale .2 ease;
+  width: 100%;
+  height: 35px;
+  transition-duration: 500ms;
+  
 }
-.btn::before{
-    content: "";
-    position: absolute;
-    height: 300%;
-    width: 100%;
-    background: linear-gradient(#25252b, #ff2770, #25252b, #ff2770);
-    top: -100%;
-    left: 0;
-    z-index: -1;
-    transition: .5s;
+.btn:active{
+  transform: scaleX(1.03);
+  letter-spacing: 2px;
+  filter: brightness(1.5);
 }
-.btn:hover:before{
-    top: 0;
+
+
+.link{
+  text-decoration: none;
+  font-size: 1rem;
+  color: #e60000;
+  text-shadow: none;
+  font-weight: bolder;
 }
-.regi-link{
-    font-size: 14px;
-    text-align: center;
-    margin: 20px 0 10px;
-    /* font-size: large; */
+
+
+.ueberschrift{
+  margin-top: 20px;
+  font-weight: 300;
+  color: #fff;
+  text-shadow: none;
+
 }
+
+
+
+@media(min-width: 992px){
+  
+
+  .spiel_plan li{
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      
+      
+      }
+      .form-box{
+         width: 40%;
+          margin-top: 10%;
+          
+          }
+
+
+    #form{
+      width: 60%  
+    }
+       
+    
+      
+
+  
+     
+     
+     }
+     
+
+
+
+
+
+
+footer{
+  width: 100%;
+  height: 10%;
+  background: rgba(255, 255, 255, 0.1);  
+  backdrop-filter: blur(5px);
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+
+}
+
+#i{
+  position: absolute;
+  font-size: 1.2rem;
+  right: 1%;
+  top: 20%;
+  text-shadow: none;
+}
+
+#ip{
+  position: absolute;
+  font-size: 1.2rem;
+  right: 1%;
+  top: 20%;
+  text-shadow: none;
+  z-index: 40;
  
-.regi-link a{
-    text-decoration: none;
-    color: #ff2770;
-    font-weight: 600;
 }
-.regi-link a:hover{
-    text-decoration: underline;
+
+#it{
+  position: absolute;
+  font-size: 1.2rem;
+  right: 1%;
+  top: 0%;
+  text-shadow: none;
 }
-.info-content{
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
-.info-content.Login{
-    right: 0;
-    text-align: right;
-    padding: 0 40px 60px 150px;
-   
-}
-.info-content h2{
-    text-transform: uppercase;
-    font-size: 36px;
-    line-height: 1.3;
-   
-}
- 
-/* Wird gefährlich wenn es Responsive werden soll ->*/
-#h2-info-content{
-    position: absolute;
-    top: 23%;
-    right: 3%;
-}
-/* <- Wird gefährlich wenn es Responsive werden soll*/
-.info-content p{
-    font-size: 16px;
- 
-}
-.container .curved-shape{
-    position: absolute;
-    right: 0;
-    top: -5px;
-    height: 600px;
-    width: 850px;
-    background: linear-gradient(45deg, #25252b, #ff2770);
-    transform: rotate(10deg) skewY(40deg);
-    transform-origin: bottom right;
+
+#hinweis {
+  color: orange;
+
 }

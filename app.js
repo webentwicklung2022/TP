@@ -34,7 +34,7 @@ const db  = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'memory'
+    database: 'tipp_spiel'
 
 })
 

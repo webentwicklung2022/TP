@@ -83,7 +83,7 @@ const flags = [
   { name: "osterreich", url: "../img/flaggen/osterreich.png" },
   { name: "polen", url: "../img/flaggen/polen.png" },
   { name: "portugal", url: "../img/flaggen/portugal.png" },
-  { name: "romanien", url: "../img/flaggen/romanien.png" },
+  { name: "rumanien", url: "../img/flaggen/rumanien.png" },
   { name: "schottland", url: "../img/flaggen/schottland.png" },
   { name: "schweiz", url: "../img/flaggen/schweiz.png" },
   { name: "serbien", url: "../img/flaggen/serbien.png" },

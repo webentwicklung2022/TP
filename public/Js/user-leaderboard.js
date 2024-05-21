@@ -49,7 +49,7 @@ table.innerHTML = "";
   table.innerHTML += `
   <tr>
 <th>Platz</th>
-<th>User</th>
+<th>Nickname</th>
 <th>Punkte</th>
 </tr>
 `
@@ -62,6 +62,9 @@ for(var i = 0; i < data.length; i++){
   <td>${data[i].punkte}</td>
  
   `
+}
+if(data.length < 1){
+  table.innerHTML = "<h3>Noch keine Einträge</h3>";
 }
 
 }

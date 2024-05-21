@@ -1,50 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/register.css">
     <title>Register</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
-   
+
+
     <div class="container">
-        <div class="curved-shape"></div>
-        <div class="form-box Login">
-            <h2>Registrieren </h2>
-            <form action="/register" method="POST">
+        <div class="logo" ><a href=""><img class="logo" src="../img/V2.png" alt=""></a></div>
+        <div class="form-box">
+            <h2 class="ueberschrift">Registrieren</h2>
+            <form action="/register" method="POST" id="form">
                 <div class="input-box">
-                    <input type="text" name="name" required>
-                    <label for="name">Benutzername</label>
-                    <i class='bx bx-user' ></i>
+                    <i id="i" class="fa-regular fa-envelope"></i>
+                    <input type="email" name="email" required placeholder=" E-Mail">
                 </div>
                 <div class="input-box">
-                    <input type="email" name="email" required>
-                    <label for="email">E-Mail</label>
-                    <i class='bx bxs-envelope' ></i>
+                    <i id="ip" onclick="showandunshowPassword()" class="fa-regular fa-eye"></i>
+                    <input id="password" type="password" name="password" required placeholder="Password">
                 </div>
                 <div class="input-box">
-                    <input type="password" name="password" required>
-                    <label for="passport">Password</label>
-                    <i class='bx bxs-lock-alt' ></i>
+                    <i id="it" class="fa-solid fa-people-group"></i>
+                    <label for="teams">Teams</label>
+                    <div class="select-box">
+                        <div class="select-box__current" tabindex="1">
+                            <div class="select-box__value">
+                                <input class="select-box__input" type="radio" id="1" value="3" name="team_id"
+                                    checked="checked" />
+                                <p class="select-box__input-text">Klinge</p>
+                            </div>
+                            <div class="select-box__value">
+                                <input class="select-box__input" type="radio" id="2" value="4" name="team_id"
+                                    checked="checked" />
+                                <p class="select-box__input-text">OTM</p>
+                            </div>
+                            <div class="select-box__value">
+                                <input class="select-box__input" type="radio" id="3" value="5" name="team_id"
+                                    checked="checked" />
+                                <p class="select-box__input-text">Rest</p>
+                            </div>
+                            <div class="select-box__value">
+                                <input class="select-box__input" type="radio" id="4" value="5" name="team_id"
+                                    checked="checked" />
+                                <p class="select-box__input-text">Team auswählen</p>
+                            </div><img class="select-box__icon" src="http://cdn.onlinewebfonts.com/svg/img_295694.svg"
+                                alt="Arrow Icon" aria-hidden="true" />
+                        </div>
+                        <ul class="select-box__list">
+                
+                            <li>
+                                <label class="select-box__option" for="1" aria-hidden="aria-hidden">Klinge</label>
+                            </li>
+                            <li>
+                                <label class="select-box__option" for="2" aria-hidden="aria-hidden">OTM</label>
+                            </li>
+                            <li>
+                                <label class="select-box__option" for="3" aria-hidden="aria-hidden">Rest</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <i id="i" class="fa-solid fa-user"></i>
+                    <input type="text" name="nickname" required placeholder="Nickname">
+                </div>
+                <div class="input-box">
+                    <i id="i" class="fa-solid fa-user"></i>
+                    <input type="vorname" name="vorname" required placeholder="Vorname">
+                </div>
+                <div class="input-box">
+                    <i id="i" class="fa-solid fa-user"></i>
+                    <input type="nachname" name="nachname" required placeholder="Nachname">
                 </div>
                 <div class="input-box">
                     <button class="btn" type="submit">Registrieren</button>
                 </div>
                 <div class="regi-link">
-                    <p>Du hast bereits ein Account ? <a href="/login">Anmelden</a></p>
+                    <p>Du hast bereits ein Account ? <a class="link" href="/login">Anmelden</a></p>
                 </div>
             </form>
- 
+
+
+            <h4 id="hinweis">{{message}}</h4>
         </div>
-        <h4>{{message}}</h4>
-        <div class="info-content Login">
-            <h2>Herzlich <br> <br> <span id="h2-info-content">Willkommen!</span></h2>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Praesentium, rem.</p>
-        </div>
-    </div>
- 
-    <script src="JS/register.js"></script>
+ <footer><small>&copy; Copyright 2024, Vincenzo, Lamanuzzi & Mahmoud, Khalaf</small></footer>
+        <script src="JS/register.js"></script>
 </body>
+
 </html>

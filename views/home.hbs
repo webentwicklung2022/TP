@@ -50,27 +50,13 @@
         {{message}}
       </p>
       <div class="spiel_plan" >
-        <div class="datum"><i id="icon" class="fa-solid fa-circle-left"></i> <p class="d">14.06.2024</p> <i id="icon"  class="fa-solid fa-circle-right"></i></div>
-        <li>
-          <div class="home"><img class="home_img" src="../img/Flag_of_Germany_Flat_Round-64x64.png"><p class="home_name">Deutschland</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">10:00 pm</div><button  class="tippen_btn"  onclick="tippenPopup(0)" >Tippen</button></div> <div class="away"><img class="away_img" src="../img/Flag_of_France_Flat_Round-64x64.png" alt=""> <p class="away_name">Frankreich</p><input type="hidden" name="match_id" class="match_id" value="200"></div>
-        </li>
-        
-        <li>
-          <div class="home"><img class="home_img" src="../img/Flag_of_Italy_Flat_Round-64x64.png"><p class="home_name">Italien</p> </div><div class="Uhrzeitundbtn"><div class="Uhrzeit">10:00 pm</div><button  class="tippen_btn"  onclick="tippenPopup(1)" >Tippen</button></div> <div class="away"><img class="away_img" src="../img/Flag_of_Spain_Flat_Round-64x64.png" alt=""> <p class="away_name">Spanien</p>   <input type="hidden" name="match_id" class="match_id" value="201"></div>
-        </li>
-        
-        <li>
-          <div class="home"><img class="home_img" src="../img/Flag_of_Portugal_Flat_Round-64x64.png"> <p class="home_name">Portugal</p></div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">10:00 pm</div><button  class="tippen_btn"  onclick="tippenPopup(2)" >Tippen</button></div> <div class="away"><img class="away_img" src="../img/flaggen/ungarn.png" alt=""> <p class="away_name">Ungarn</p>  <input type="hidden" name="match_id" class="match_id" value="202"></div>
-        </li>
-        
-
       </div>
 
 
     </section>
     <div class="popup">
       <div class="box">
-        <i id="X" class="fa-solid fa-xmark" onclick="displayNone()"></i>
+        <i id="X" style="color: red;" class="fa-solid fa-xmark" onclick="displayNone()"></i>
         <p class="erklärung">bitte geben Sie das Ergebins des Spiels ein</p>
         <form class="box2" method="post" action="/tipp">
          

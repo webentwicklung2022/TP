@@ -2,409 +2,250 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
+const nodemailer = require('nodemailer');
 
 
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'memory'
+    database: 'tipp_spiel'
 
 })
 
-router.post('/eintragen', (req, res) => {
-    const { Frage, Antwort, Set_ID } = req.body;
 
-    // Beispiel für eine SQL-Abfrage zum Einfügen von Daten
-    const sql = 'INSERT INTO karten (Frage, Antwort, Set_ID) VALUES (?, ?, ?)';
-
-
-    // Führe die SQL-Abfrage aus und übergib die Werte als Parameter
-    db.query(sql, [Frage, Antwort, Set_ID], (error, results) => {
-        if (error) {
-            console.error('Fehler beim Einfügen der Daten:', error);
-            res.status(500).send('Interner Serverfehler');
-            return;
-        }
-
-        console.log('Daten erfolgreich eingefügt:', results);
-
-        // Hier könntest du optional eine Weiterleitung oder eine andere Antwort senden
-        res.render('index');
-    });
-});
 
 router.get('/', checkAuthenticated, (req, res) => {
 
-    if (req.isAuthenticated()) {
+    const user = decipher(req).split(',');
 
-        res.render("Start", { m: "angemeldet", s: req.user.name });
-    } else {
-        res.render("Start");
-    }
-
-});
-router.get('/Memory', (req, res) => {
-
-    if (req.isAuthenticated()) {
-        res.render("Memory", { a: true });
-    } else {
-        res.render("Memory");
-    }
-    res.render("Memory");
-});
-router.get('/test', (req, res) => {
-    res.render("test");
-});
-
-router.get('/Setwaehlen', (req, res) => {
-    res.render("Setwaehlen");
-});
-
-router.get('/Setbearbeiten', checkAuthenticated, (req, res) => {
-    res.render("SetBearbeiten");
-});
-
-router.get('/QuizSeterstellen', checkAuthenticated, (req, res) => {
-    res.render("Seterstellen");
-});
-
-
-router.post('/setausgewaehlt', (req, res) => {
-
-    set = req.body.id;
-    return res.render('Memory', { Set: set });
-
-});
-
-
-router.get('/eintraegeAnzeigen', (req, res) => {
-    let ergebnis = '';
-    db.query('Select * from karten', (error, results) => {
-
-        if (error) {
-            console.error('Fehler beim abfragen der Daten:', error);
-            res.status(500).send('Interner Serverfehler');
-            return;
-        }
-
-        console.log('Daten erfolgreich abgefragt:', results);
-
-
-
-        res.render('test', { karten: results });
-
-
-    });
-
-
-});
-
-router.post('/sqlbefehl', (req, res) => {
-    const sqlbefehl = req.body.sqlbefehl;
-
-    // Beispiel für eine SQL-Abfrage zum Einfügen von Daten
-
-
-    // Führe die SQL-Abfrage aus und übergib die Werte als Parameter
-    db.query(sqlbefehl, (error, results) => {
-        if (error) {
-            console.error('Fehler beim Einfügen der Daten:', error);
-            res.status(500).send('Interner Serverfehler');
-            return;
-        }
-
-        console.log('Daten erfolgreich eingefügt:', results);
-
-        // Hier könntest du optional eine Weiterleitung oder eine andere Antwort senden
-        res.render('test', { karten: results });
-    });
-});
-
-
-
-router.get('/abfrage/:befehl', (req, res) => {
-    try {
-        // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
-        const befehl = req.params.befehl;
-        console.log('Ausgeführter Befehl:', befehl);
-
-        // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
-        db.query(befehl, (error, results) => {
-            if (error) {
-                console.error('Fehler beim Abfragen der Daten:', error);
-                res.status(500).json({ error: 'Interner Serverfehler' });
-                return;
-            }
-
-            console.log('Daten erfolgreich abgefragt:', results);
-            // Sende die Ergebnisse als JSON.
-            res.json(results);
-        });
-    } catch (error) {
-        console.error('Unbehandelter Fehler:', error);
-        res.status(500).json({ error: 'Interner Serverfehler' });
-    }
-});
-
-router.get('/abfrage1/:befehl/:werte', (req, res) => {
-
-    try {
-        // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
-        var befehl = req.params.befehl;
-        var werte = req.params.werte || "";
-        if (befehl == "4" && !req.isAuthenticated() /*hier muss auf server noch nicht Admin sein*/) {
-            befehl = ""
-        }
-
-        switch (befehl) {
-            case "1":
-                befehl = "SELECT * FROM karten WHERE Set_ID =" + werte;
-                break;
-            case "2":
-                befehl = "SELECT * FROM sets";
-                break;
-            case "3":
-                befehl = "SELECT MAX(ID) AS 'ID' FROM sets";
-                break;
-            case "4":
-                befehl = "DELETE FROM sets WHERE Name_Set =" + werte;
-                break;
-            case "5":
-                befehl = "select SetID from spiele where Memory ='1'";
-                break;
-            case "6":
-                befehl = "select * from sets Where ID "+ werte;
-                break;
-            default:
-                befehl = "SELECT * FROM karten";
-        }
-        console.log('Ausgeführter Befehl:', befehl);
-        // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
-        db.query(befehl, (error, results) => {
-            if (error) {
-                console.error('Fehler beim Abfragen der Daten:', error);
-                res.status(500).json({ error: 'Interner Serverfehler' });
-                return;
-            }
-
-            console.log('Daten erfolgreich abgefragt:', results);
-            // Sende die Ergebnisse als JSON.
-            res.json(results);
-        });
-    } catch (error) {
-        console.error('Unbehandelter Fehler:', error);
-        res.status(500).json({ error: 'Interner Serverfehler' });
-    }
-});
-
-router.post('/delete', async (req, res) => {
-    try {
-        // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
-        const befehl = req.body.befehl;
-        console.log('Ausgeführter Befehl:', befehl);
-
-        // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
-        const results = await db.query(befehl);
-
-        console.log('Daten erfolgreich gelöscht:', results);
-        // Sende die Ergebnisse als JSON.
-        res.redirect('/Setbearbeiten');
-    } catch (error) {
-        console.error('Fehler beim Abfragen der Daten:', error);
-        res.status(500).json({ error: 'Interner Serverfehler' });
-    }
-});
-
-
-
-router.post('/MemorySetErstellen', checkAuthenticated, (req, res) => {
-    const { setID, NameSet, ThemaSet,
-        Frage, Antwort,
-        Frage1, Antwort1,
-        Frage2, Antwort2,
-        Frage3, Antwort3,
-        Frage4, Antwort4,
-        Frage5, Antwort5,
-        Frage6, Antwort6,
-        Frage7, Antwort7,
-        Frage8, Antwort8,
-        Frage9, Antwort9, } = req.body;
-    const werte1 = [setID, NameSet, ThemaSet];
-    const werte2 = [Frage, Antwort, setID,
-        Frage1, Antwort1, setID,
-        Frage2, Antwort2, setID,
-        Frage3, Antwort3, setID,
-        Frage4, Antwort4, setID,
-        Frage5, Antwort5, setID,
-        Frage6, Antwort6, setID,
-        Frage7, Antwort7, setID,
-        Frage8, Antwort8, setID,
-        Frage9, Antwort9, setID];
-
-    const werte3 = [setID, "1", "0", "0"];
-
-    const sql1 = `INSERT INTO sets (ID, Name_Set, LernThema ) VALUES (?, ?, ?)`;
-    const sql2 = `INSERT INTO karten (Frage, Antwort, Set_ID) VALUES 
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?),
-    (?, ?, ?)`;
-    const sql3 = `INSERT INTO spiele (SetID, Memory, Karteikarten, Quiz) VALUES (?, ?, ?, ?)`;
-
-
-
-
-
-
-    db.query(sql1, werte1, (error, results) => {
-        if (error) {
-            console.error('Fehler beim Einfügen der Daten:', error);
-            res.status(500).send('Interner Serverfehler');
-            return;
-        }
-
-        console.log('Daten erfolgreich eingefügt:', results);
-
-
-    });
-
-    setTimeout(function () {
-        db.query(sql2, werte2, (error, results) => {
-            if (error) {
-                console.error('Fehler beim Einfügen der Daten:', error);
-                res.status(500).send('Interner Serverfehler');
-                return;
-            }
-
-            console.log('Daten erfolgreich eingefügt:', results);
-
-
-        });
-
-    }, 500);
-    setTimeout(function () {
-        db.query(sql3, werte3, (error, results) => {
-            if (error) {
-                console.error('Fehler beim Einfügen der Daten:', error);
-                res.status(500).send('Interner Serverfehler');
-                return;
-            }
-
-            console.log('Daten erfolgreich eingefügt:', results);
-            res.redirect('/Setwaehlen');
-
-        });
-
-    }, 600);
-
-
-
+    res.render("home", { nickname: user[2] });
 
 
 });
 
 function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
+    if (decipher(req) !== null) {
         return next()
     }
 
     res.redirect('/login')
 }
 
-function getName(email) {
+
+router.get('/user-leaderboard', checkAuthenticated, (req, res) => {
+  
 
     try {
-        // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
-        const befehl = "select name from users where email =" + email;
-        console.log('Ausgeführter Befehl:', befehl);
-
-        // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
+       
+        const user = decipher(req).split(',');
+        const user_Id = user[0];
+        const befehl = "SELECT punkte FROM users WHERE id = " + user_Id ;  
+ 
+        
         db.query(befehl, (error, results) => {
             if (error) {
                 console.error('Fehler beim Abfragen der Daten:', error);
-
-                return [];
+                res.status(500).json({ error: 'Interner Serverfehler' });
+                return;
             }
 
             console.log('Daten erfolgreich abgefragt:', results);
             // Sende die Ergebnisse als JSON.
-            return results;
-
-
+            res.render("user-leaderboard", {punkte: results[0].punkte});
         });
     } catch (error) {
         console.error('Unbehandelter Fehler:', error);
-
+        res.status(500).json({ error: 'Interner Serverfehler' });
     }
+    
 
-}
 
-router.get('/session', (req, res) => {
-    // Alle Inhalte der Benutzersitzung abrufen
-    const sessionData = req.session;
-  
-    // Ausgabe der Sitzungsdaten
-    res.json(sessionData);
-  });
-
- router.get('/set-user-id/:userId', (req, res) => {
-    // Benutzer-ID aus den URL-Parametern abrufen
-    const userId = req.params.userId;
-    const crypto = require('crypto');
-
-    const algorithm = 'aes-256-cbc';
-    const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel auf 32 Bytes vergrößern
-
-    // Initialisierungsvektor erzeugen
-    const iv = crypto.randomBytes(16);
-
-    // Text verschlüsseln
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    let encrypted = cipher.update(userId, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-
-    // Cookie mit der Benutzer-ID und IV setzen
-    res.cookie('userId', encrypted, { maxAge: 900000, httpOnly: true, secure: true });
-    res.cookie('iv', iv.toString('hex'), { maxAge: 900000, httpOnly: true, secure: true });
-
-    // Bestätigungsnachricht senden
-    res.send(`Benutzer-ID ${encrypted} wurde erfolgreich im Cookie gespeichert.`);
 });
 
-router.get('/get-cookie', (req, res) => {
-    const crypto = require('crypto');
 
+router.get('/teams-leaderboard', checkAuthenticated, (req, res) => {
+
+    res.render("teams-leaderboard");
+
+
+});
+
+router.get('/tipp-history', checkAuthenticated, (req, res) => {
+
+    res.render("tipp-history");
+
+
+});
+
+router.get('/contact', checkAuthenticated, (req, res) => {
+
+    res.render("contact");
+
+
+});
+
+router.post('/contact', checkAuthenticated, (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const comment = req.body.comment;
+    console.log(name + " " + email + " " + comment);
+
+
+    // Transporter-Konfiguration
+    let transporter = nodemailer.createTransport({
+        service: 'gmail', // Sie können jeden anderen E-Mail-Service verwenden
+        auth: {
+            user: 'tippspiel2024@gmail.com',
+            pass: 'msxy qxbj trey mcgv'
+        }
+    });
+
+    // E-Mail-Optionen
+    let mailOptions = {
+        from: email,
+        to: 'webentwicklung2022@gmail.com',
+        subject: `Kontaktformular Nachricht von Tipp-Spiel`,
+        html: `<b>Email: ${email}</b> <br> <b>Name: ${name}</b> <br> <b>Nachricht:</b> ${comment}`
+    };
+
+    // E-Mail senden
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return res.status(500).send(error.toString());
+        }
+        res.render("contact" , {msg: "die Nachricht wurde erfolgreich gesendet."});
+    });
+
+});
+
+
+router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
+
+    try {
+        // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
+
+        var befehl = req.params.befehl;
+        var werte = req.params.werte || "";
+        const user = decipher(req).split(',');
+        const user_Id = user[0];
+
+        console.log(werte)
+        switch (befehl) {
+            case "1":
+                befehl = "SELECT punkte, nickname FROM users WHERE punkte != 0 order by punkte desc";
+                break;
+            case "2":
+                befehl = "SELECT team.name as name, sum(users.punkte) as punkte FROM users join team on users.team_id = team.id WHERE punkte != 0 group by team.name order by punkte desc";
+                break;
+            case "3":
+                befehl = "SELECT home_team, away_team, home_score, away_score, status from tipp where user_id =" + user_Id;
+                break;
+            case "4":
+                befehl = "SELECT id, home_name, away_name, date, time from spiele where date = '" + werte + "'";
+                break;
+            default:
+                befehl = "SELECT * FROM team";
+        }
+        console.log('Ausgeführter Befehl:', befehl);
+        // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
+        db.query(befehl, (error, results) => {
+            if (error) {
+                console.error('Fehler beim Abfragen der Daten:', error);
+                res.status(500).json({ error: 'Interner Serverfehler' });
+                return;
+            }
+
+            console.log('Daten erfolgreich abgefragt:', results);
+            // Sende die Ergebnisse als JSON.
+            res.json(results);
+        });
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+});
+
+router.post('/tipp', checkAuthenticated, (req, res) => {
+
+    try {
+        const user = decipher(req).split(',');
+        const user_Id = user[0];
+        const match_id = req.body.match_id;
+        const match_date = req.body.match_date;
+        const home_team = req.body.home_team;
+        const away_team = req.body.away_team;
+        const home_score = req.body.home_score;
+        const away_score = req.body.away_score;
+        const status = "offen";
+        const recive_date = "null";
+
+        console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date)
+
+        const selectQuery = "SELECT match_id FROM tipp WHERE match_id = ? and user_id = ?";
+        const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
+
+        console.log('Ausgeführter Befehl:', selectQuery);
+
+        db.query(selectQuery, [match_id, user_Id], (error, results) => {
+            if (error) {
+                console.error('Fehler beim Abfragen der Daten:', error);
+                return res.status(500).send('Fehler beim Abfragen der Daten');
+            }
+
+            if (results.length > 0) {
+                return res.render("home", { message: "Bereits getippt" });
+            }
+
+            db.query(insertQuery, [user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date], (error, results) => {
+                if (error) {
+                    console.error('Fehler beim Einfügen der Daten:', error);
+                    return res.status(500).send('Fehler beim Einfügen der Daten');
+                }
+
+                console.log("Erfolgreich eingefügt");
+                res.redirect('/');
+            });
+        });
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).send('Unbehandelter Fehler');
+    }
+
+
+});
+
+
+
+
+
+function decipher(req) {
+
+    const crypto = require('crypto');
     // Cookie mit dem Namen "userId" abrufen
-    const encryptedUserId = req.cookies.userId;
+    const encryptedUser = req.cookies.pre;
     const ivHex = req.cookies.iv;
 
     // Überprüfen, ob das Cookie vorhanden ist
-    if (encryptedUserId && ivHex) {
+    if (encryptedUser && ivHex) {
         // Schlüssel und IV wiederherstellen
         const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
         const iv = Buffer.from(ivHex, 'hex');
 
         // Text entschlüsseln
         const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decrypted = decipher.update(encryptedUserId, 'hex', 'utf8');
+        let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
 
         // Entschlüsselte Benutzer-ID im Response anzeigen
-        res.send(`Entschlüsselte Benutzer-ID: ${decrypted}`);
+        return decrypted;
     } else {
-        res.send('Cookie nicht gefunden');
+        return null;
     }
-});
+}
 
 
-  
+
 
 
 

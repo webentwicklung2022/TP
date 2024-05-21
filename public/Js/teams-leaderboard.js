@@ -60,6 +60,9 @@ for(var i = 0; i < data.length; i++){
  
   `
 }
+if(data.length < 1){
+  table.innerHTML = "<h3>Noch keine Einträge</h3>";
+}
 
 }
 

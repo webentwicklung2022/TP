@@ -141,7 +141,11 @@ const home_img = document.getElementsByClassName("home_img");
 const away_img = document.getElementsByClassName("away_img");
 
 function displayNone(){
-  popup.style.display = "none";
+  popup.style.left = "110%";
+  setTimeout(function() {
+    popup.style.display = "none";
+   
+  }, 200);
 
 }
 
@@ -166,7 +170,9 @@ function tippenPopup(index){
 
   
   `;
-
+  setTimeout(function() {
+    popup.style.left = "0";
+  }, 200);
 
 
 }
