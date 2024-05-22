@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teams-Leaderboard</title>
-  <link rel="stylesheet" href="../css/teams-leaderboard.css">
+  <title>Benutzer-Leaderboard</title>
+  <link rel="stylesheet" href="../css/user-leaderboard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -19,11 +19,11 @@
             style="width: 50px; height:50px "></a></div>
       <ul class="links">
         <li><a href="./"> <i class="fa-solid fa-house"></i> Home</a></li>
-        <li><a href="/user-leaderboard"><i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
+        <li><a href="./teams-leaderboard"><i class="fa-solid fa-list-ol"></i> Teams-Leaderboard</a></li>
         <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
         <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
       </ul>
-       <li><form id="logout" action="/logout?_method=DELETE" method="POST">
+      <li><form id="logout" action="/logout?_method=DELETE" method="POST">
     <button type="submit">Logout</button>
 </form>
         <button  onclick="logout()"  class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</button>
@@ -33,10 +33,10 @@
 
     <div class="dropdown_menu">
       <li><a href="./"> <i class="fa-solid fa-house"></i> Home</a></li>
-      <li><a href="./user-leaderboard"><i class="fa-solid fa-list-ol"></i> Benutzer-Leaderboard</a></li>
+      <li><a href="./teams-leaderboard"><i class="fa-solid fa-list-ol"></i> Gruppen-Leaderboard</a></li>
       <li><a href="/tipp-history"><i class="fa-solid fa-clock-rotate-left"></i> Tipp-Verlauf</a></li>
       <li><a href="contact"><i class="fa-solid fa-phone"></i> Contact</a></li>
-         <li><form id="logout" action="/logout?_method=DELETE" method="POST">
+     <li><form id="logout" action="/logout?_method=DELETE" method="POST">
     <button type="submit">Logout</button>
 </form>
         <button  onclick="logout()"  class="action_btn"><i class="fa-solid fa-right-from-bracket"></i>  logout</button></li>
@@ -44,30 +44,22 @@
   </header>
   <main>
     <section id="hero">
-      <h1>Teams-Leaderboard</h1>
+      <h1>Benutzer-Leaderboard</h1>
       <p>
-       <br> Deine Team: {{punkte}} <i class="fa-regular fa-star"></i>
-        <div class="listing"><i id="icon" class="fa-solid fa-circle-left"></i> <p class="d">Heute</p> <i id="icon" class="fa-solid fa-circle-right"></i></div>
+        <br> Dein Kontostand: {{punkte}} Punkte
       </p>
-      <div class="leaderboard" >           
+      <div class="listing"><i id="icon" class="fa-solid fa-circle-left"></i> <p class="d">Heute</p> <i id="icon" class="fa-solid fa-circle-right"></i></div>
+      <div class="leaderboard" >
+                   
         <table id="table">
-          {{!-- <tr>
-          <th>Platz</th>
-          <th>User</th>
-          <th>Punkte</th>
-          </tr>
-          <tr>
-          <td>1</td>
-          <td>Maria Anders</td>
-          <td>10</td>
-          --}}
+       
           </table>  
       </div>
 
     </section>
   </main>
   <footer><small>&copy; Copyright 2024, Vincenzo, Lamanuzzi & Mahmoud, Khalaf</small></footer>
-  <script src="../js/teams-leaderboard.js"></script>
+  <script src="../js/user-leaderboard.js"></script>
 </body>
 
 </html>

@@ -1,9 +1,37 @@
+var cats = ['Gesamt', 'Wöchentlich', 'Täglich']
+var index = 0;
+var cat = cats[index];
+
+function schalter(richtung){
+
+  if(richtung == "rechts"){
+    if(index < 2){
+      index++;
+      cat = cats[index]
+    }else{
+      return
+    }
+   
+
+  }else{
+    if(index > 0){
+      index--;
+      cat = cats[index]
+    }else{
+      return
+    }
+   
+  }
+
+
+  fetchData()
+}
 
 
 async function fetchData() {
     try {
         
-      const response = await fetch("/abfrage/2/null");
+      const response = await fetch("/abfrage/2/" + cat);
   
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -39,10 +67,11 @@ toggleBtn.onclick = function (){
 }
 
 const table = document.querySelector("#table")
+const listing = document.querySelector(".listing");
 
 function datenEinfuegen(data){
 table.innerHTML = "";
-
+listing.innerHTML =`<i id="icon" onclick="schalter('links')" class="fa-solid fa-circle-left"></i> <p class="d">${cat}</p> <i id="icon" onclick="schalter('rechts')" class="fa-solid fa-circle-right"></i>`;
   table.innerHTML += `
   <tr>
 <th>Platz</th>

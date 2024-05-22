@@ -3,7 +3,7 @@ const router = express.Router();
 const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
-
+const moment = require('moment');
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -15,10 +15,10 @@ const db = mysql.createConnection({
 
 
 
-router.get('/', checkAuthenticated, (req, res) => {
+router.get('/',  checkAuthenticated, async (req, res) => {
 
     const user = decipher(req).split(',');
-
+   
     res.render("home", { nickname: user[2] });
 
 
@@ -66,7 +66,35 @@ router.get('/user-leaderboard', checkAuthenticated, (req, res) => {
 
 router.get('/teams-leaderboard', checkAuthenticated, (req, res) => {
 
-    res.render("teams-leaderboard");
+    
+    try {
+       
+        const user = decipher(req).split(',');
+        const team_Id = user[4];
+       
+        const befehl = `SELECT SUM(users.punkte) AS punkte
+        FROM users
+        JOIN team ON users.team_id = team.id
+        WHERE team_id = ${team_Id}
+        GROUP BY team.name
+        ORDER BY punkte DESC;`;  
+ 
+        
+        db.query(befehl, (error, results) => {
+            if (error) {
+                console.error('Fehler beim Abfragen der Daten:', error);
+                res.status(500).json({ error: 'Interner Serverfehler' });
+                return;
+            }
+
+            console.log('Daten erfolgreich abgefragt:', results);
+            // Sende die Ergebnisse als JSON.
+            res.render("teams-leaderboard", {punkte: results[0].punkte});
+        });
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
 
 
 });
@@ -119,6 +147,13 @@ router.post('/contact', checkAuthenticated, (req, res) => {
 
 });
 
+router.get('/table', checkAuthenticated, (req, res) => {
+
+    res.render("table");
+
+
+});
+
 
 router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
 
@@ -130,19 +165,65 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
         const user = decipher(req).split(',');
         const user_Id = user[0];
 
-        console.log(werte)
+        console.log(werte);
         switch (befehl) {
             case "1":
-                befehl = "SELECT punkte, nickname FROM users WHERE punkte != 0 order by punkte desc";
-                break;
+                
+                if(werte == "Gesamt"){
+                    befehl = "SELECT punkte, nickname FROM users WHERE punkte != 0 order by punkte desc";
+                    break;
+                }else if(werte  == "Wöchentlich"){
+                    befehl = `SELECT SUM(tipp.recived_points) AS punkte, users.nickname AS nickname
+                    FROM users
+                    JOIN tipp ON users.id = tipp.user_id
+                    WHERE tipp.recive_date >= CURRENT_DATE - INTERVAL '7' DAY
+                    GROUP BY tipp.user_id, users.nickname
+                    HAVING SUM(tipp.recived_points) > 0  -- Having clause to filter users with points only
+                    ORDER BY SUM(tipp.recived_points) DESC;
+                    `;
+                    break;
+                }else{
+                    befehl = `SELECT SUM(tipp.recived_points) AS punkte, users.nickname AS nickname
+                    FROM users
+                    JOIN tipp ON users.id = tipp.user_id
+                    WHERE DATE(tipp.recive_date) = CURRENT_DATE
+                    GROUP BY tipp.user_id, users.nickname
+                    HAVING SUM(tipp.recived_points) > 0  -- Having clause to filter users with points only
+                    ORDER BY SUM(tipp.recived_points) DESC;
+                    `;
+                    break;
+                }
+                
             case "2":
-                befehl = "SELECT team.name as name, sum(users.punkte) as punkte FROM users join team on users.team_id = team.id WHERE punkte != 0 group by team.name order by punkte desc";
-                break;
+                if(werte == "Gesamt"){
+                    befehl = "SELECT team.name as name, sum(users.punkte) as punkte FROM users join team on users.team_id = team.id WHERE punkte != 0 group by team.name order by punkte desc";
+                    break;
+                }else if(werte  == "Wöchentlich"){
+                    befehl = `SELECT team.name AS name, SUM(tipp.recived_points) AS punkte
+                    FROM users
+                    JOIN team ON users.team_id = team.id
+                    JOIN tipp ON users.id = tipp.user_id
+                    WHERE tipp.recive_date >= CURRENT_DATE - INTERVAL '7' DAY
+                    GROUP BY team.name
+                    HAVING SUM(tipp.recived_points) > 0
+                    ORDER BY punkte DESC;`;
+                    break;
+                }else{
+                    befehl = `SELECT  team.name as name, sum(tipp.recived_points) as punkte
+                    FROM users 
+                    join team on users.team_id = team.id 
+                    join tipp on users.id = tipp.user_id
+                     WHERE DATE(tipp.recive_date) = CURRENT_DATE
+                     group by team.name  
+                     HAVING SUM(tipp.recived_points) > 0 
+                     order by punkte desc`;
+                    break;
+                }
             case "3":
                 befehl = "SELECT home_team, away_team, home_score, away_score, status from tipp where user_id =" + user_Id;
                 break;
             case "4":
-                befehl = "SELECT id, home_name, away_name, date, time from spiele where date = '" + werte + "'";
+                befehl = "SELECT id, home_name, away_name, date, time, ausgang, home_score, away_score from spiele where date = '" + werte + "'";
                 break;
             default:
                 befehl = "SELECT * FROM team";
@@ -166,7 +247,7 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
     }
 });
 
-router.post('/tipp', checkAuthenticated, (req, res) => {
+router.post('/tipp', checkAuthenticated, async (req, res) => {
 
     try {
         const user = decipher(req).split(',');
@@ -181,6 +262,12 @@ router.post('/tipp', checkAuthenticated, (req, res) => {
         const recive_date = "null";
 
         console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date)
+
+        const result = await getDateTimeByMatchId(match_id);
+        if(checkDateAndTime(result.date, result.time)){
+            return res.render("home", { message: "Tippzeit abgelaufen" });
+        }
+        
 
         const selectQuery = "SELECT match_id FROM tipp WHERE match_id = ? and user_id = ?";
         const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
@@ -244,8 +331,69 @@ function decipher(req) {
     }
 }
 
+function getDateTimeByMatchId(match_id) {
+    // Dies ist ein Platzhalter für eine echte Datenbankabfrage.
+    // In der Realität würde dies eine asynchrone Funktion sein.
+    const befehl = `SELECT date, time FROM spiele WHERE id = ${match_id}`;
+  
+    return new Promise((resolve, reject) => {
+
+        try {
+            db.query(befehl, (error, results) => {
+                if (error) {
+                  console.error('Fehler beim Abfragen der Daten:', error);
+                  return; reject(new Error('Fehler beim Abfragen der Daten'));
+                  
+                }
+          
+                
+                return  resolve(results[0]);
+              });
+            
+        } catch (error) {
+            reject(error);
+        }
+     
+    });
+  }
 
 
+  function checkDateAndTime(date , time) {
+    const now = new Date();
+
+    // Neues Date-Objekt basierend auf der aktuellen Zeit erstellen
+    const timeMinus30 = new Date(now);
+    console.log(now);
+    // 30 Minuten von der neuen Zeit abziehen
+    timeMinus30.setMinutes(timeMinus30.getMinutes() - 30);
+    
+    // Optionen für die Formatierung des Datums
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    
+    // Datum und Uhrzeit formatieren
+    const formattedDate = now.toLocaleDateString('de-DE', options); // z.B. 22.05.2024
+    const formattedTime = now.toLocaleTimeString('de-DE'); // z.B. 10:23:54
+    const formattedTimeMinus30 = timeMinus30.toLocaleTimeString('de-DE'); // z.B. 09:53:54
+    
+
+    const d1 = convertToDate(formattedDate);
+    const d2 = convertToDate(date);
+   
+    // Überprüfen Sie das Datum und die Uhrzeit
+    if ((formattedDate == date && time.substring(0, 5) > formattedTimeMinus30) || d1 > d2 ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function convertToDate(dateString) {
+    let parts = dateString.split('.');
+    let day = parseInt(parts[0], 10);
+    let month = parseInt(parts[1], 10) - 1; // Monate sind 0-basiert in JavaScript
+    let year = parseInt(parts[2], 10);
+    return new Date(year, month, day);
+}
 
 
 

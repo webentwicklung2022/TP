@@ -17,7 +17,7 @@ var date = dates[index];
 function schalter(richtung){
 
   if(richtung == "rechts"){
-    if(index < 12){
+    if(index < dates.length){
       index++;
       date = dates[index]
     }else{
@@ -66,11 +66,22 @@ const spiel_plan = document.querySelector(".spiel_plan")
   function datenEinfuegen(data){
     spiel_plan.innerHTML =`<div class="datum"><i id="icon" onclick="schalter('links')" class="fa-solid fa-circle-left"></i> <p class="d">${data[0].date}</p> <i id="icon" onclick="schalter('rechts')" class="fa-solid fa-circle-right"></i></div>`;
    for(var x = 0; x < data.length; x++){
-    spiel_plan.innerHTML += `
-    <li>
-          <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">${data[x].time.substring(0, 5)} Uhr</div><button  class="tippen_btn"  onclick="tippenPopup(${x})" >Tippen</button></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
-        </li>
-    `
+
+    if(data[x].ausgang == "null"){
+      spiel_plan.innerHTML += `
+      <li>
+            <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">${data[x].time.substring(0, 5)} Uhr</div><button  class="tippen_btn"  onclick="tippenPopup(${x})" >Tippen</button></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
+          </li>
+      `
+    }else{
+      spiel_plan.innerHTML += `
+      <li>
+            <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">Ausgang</div><h3 style="font-size: 1.6rem">${data[x].home_score} - ${data[x].away_score}<h3></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
+          </li>
+      `
+
+    }
+    
 
 
    }

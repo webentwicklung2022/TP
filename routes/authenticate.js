@@ -132,7 +132,7 @@ router.post('/login' ,passport.authenticate('local', {
 
 
 router.get('/pre', (req, res) => {
-    const user = req.user.id + "," + req.user.email  + "," + req.user.nickname +  "," + req.user.punkte;;
+    const user = req.user.id + "," + req.user.email  + "," + req.user.nickname +  "," + req.user.punkte  +  "," + req.user.team_id;
     const crypto = require('crypto');
 
     const algorithm = 'aes-256-cbc';
