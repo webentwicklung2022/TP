@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
-const nodemailer = require('nodemailer');
-const moment = require('moment');
+const nodemailer = require('nodemailer'); 
+const moment = require('moment');  
+const cron = require('node-cron');
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -18,7 +19,7 @@ const db = mysql.createConnection({
 router.get('/',  checkAuthenticated, async (req, res) => {
 
     const user = decipher(req).split(',');
-   
+ 
     res.render("home", { nickname: user[2] });
 
 
@@ -66,7 +67,7 @@ router.get('/user-leaderboard', checkAuthenticated, (req, res) => {
 
 router.get('/teams-leaderboard', checkAuthenticated, (req, res) => {
 
-    
+     
     try {
        
         const user = decipher(req).split(',');
@@ -96,7 +97,7 @@ router.get('/teams-leaderboard', checkAuthenticated, (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 
-
+ 
 });
 
 router.get('/tipp-history', checkAuthenticated, (req, res) => {
@@ -113,6 +114,7 @@ router.get('/contact', checkAuthenticated, (req, res) => {
 
 });
 
+ 
 router.post('/contact', checkAuthenticated, (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
@@ -155,6 +157,7 @@ router.get('/table', checkAuthenticated, (req, res) => {
 });
 
 
+
 router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
 
     try {
@@ -165,10 +168,10 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
         const user = decipher(req).split(',');
         const user_Id = user[0];
 
-        console.log(werte);
+     
         switch (befehl) {
             case "1":
-                
+                 /*Host*/
                 if(werte == "Gesamt"){
                     befehl = "SELECT punkte, nickname FROM users WHERE punkte != 0 order by punkte desc";
                     break;
@@ -193,8 +196,9 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
                     `;
                     break;
                 }
-                
+                 /*Host*/
             case "2":
+                 /*Host*/
                 if(werte == "Gesamt"){
                     befehl = "SELECT team.name as name, sum(users.punkte) as punkte FROM users join team on users.team_id = team.id WHERE punkte != 0 group by team.name order by punkte desc";
                     break;
@@ -219,16 +223,17 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
                      order by punkte desc`;
                     break;
                 }
+                 /*Host*/
             case "3":
                 befehl = "SELECT home_team, away_team, home_score, away_score, status from tipp where user_id =" + user_Id;
                 break;
             case "4":
-                befehl = "SELECT id, home_name, away_name, date, time, ausgang, home_score, away_score from spiele where date = '" + werte + "'";
+                befehl = "SELECT id, home_name, away_name, date, time, ausgang, home_score, away_score from spiele where date = '" + werte + "'";  /*Host ausgang, home_score, away_score*/
                 break;
             default:
                 befehl = "SELECT * FROM team";
         }
-        console.log('Ausgeführter Befehl:', befehl);
+       
         // Hier sollte db.query sicher implementiert sein (abhängig von deinem Datenbankmodul).
         db.query(befehl, (error, results) => {
             if (error) {
@@ -237,7 +242,7 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
                 return;
             }
 
-            console.log('Daten erfolgreich abgefragt:', results);
+            
             // Sende die Ergebnisse als JSON.
             res.json(results);
         });
@@ -263,11 +268,12 @@ router.post('/tipp', checkAuthenticated, async (req, res) => {
 
         console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date)
 
+        /*Host*/
         const result = await getDateTimeByMatchId(match_id);
         if(checkDateAndTime(result.date, result.time)){
             return res.render("home", { message: "Tippzeit abgelaufen" });
         }
-        
+         /*Host*/
 
         const selectQuery = "SELECT match_id FROM tipp WHERE match_id = ? and user_id = ?";
         const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
@@ -331,9 +337,11 @@ function decipher(req) {
     }
 }
 
-function getDateTimeByMatchId(match_id) {
+ 
+
+async function getDateTimeByMatchId(match_id) {
     // Dies ist ein Platzhalter für eine echte Datenbankabfrage.
-    // In der Realität würde dies eine asynchrone Funktion sein.
+   
     const befehl = `SELECT date, time FROM spiele WHERE id = ${match_id}`;
   
     return new Promise((resolve, reject) => {
@@ -357,35 +365,37 @@ function getDateTimeByMatchId(match_id) {
     });
   }
 
-
+/*HOST ÄNDERUNG EINFÜGEN*/
   function checkDateAndTime(date , time) {
     const now = new Date();
 
-    // Neues Date-Objekt basierend auf der aktuellen Zeit erstellen
-    const timeMinus30 = new Date(now);
-    console.log(now);
-    // 30 Minuten von der neuen Zeit abziehen
-    timeMinus30.setMinutes(timeMinus30.getMinutes() - 30);
+
     
     // Optionen für die Formatierung des Datums
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     
     // Datum und Uhrzeit formatieren
     const formattedDate = now.toLocaleDateString('de-DE', options); // z.B. 22.05.2024
-    const formattedTime = now.toLocaleTimeString('de-DE'); // z.B. 10:23:54
-    const formattedTimeMinus30 = timeMinus30.toLocaleTimeString('de-DE'); // z.B. 09:53:54
-    
+  
+
+    const timeStr = time;
+    const timeObj = moment(timeStr, 'HH:mm:ss');
+    const timeMinus30 = timeObj.subtract(30, 'minutes');
+    const currentTime = moment();
+    const isCurrentTimeGreater = currentTime.isAfter(timeMinus30);
 
     const d1 = convertToDate(formattedDate);
     const d2 = convertToDate(date);
    
     // Überprüfen Sie das Datum und die Uhrzeit
-    if ((formattedDate == date && time.substring(0, 5) > formattedTimeMinus30) || d1 > d2 ) {
+    if ((formattedDate == date && isCurrentTimeGreater) || d1 > d2 ) {
         return true;
     } else {
         return false;
     }
 }
+/*HOST*/
+
 
 function convertToDate(dateString) {
     let parts = dateString.split('.');
@@ -396,10 +406,160 @@ function convertToDate(dateString) {
 }
 
 
+/*HOST*/
+async function getApiId() {
+    // Dies ist ein Platzhalter für eine echte Datenbankabfrage.
+   
+    const befehl = `SELECT api_id FROM spiele where api_id != 0 and ausgang = 'null'`;
+  
+    return new Promise((resolve, reject) => {
+
+        try {
+            db.query(befehl, (error, results) => {
+                if (error) {
+                  console.error('Fehler beim Abfragen der Daten:', error);
+                  return; reject(new Error('Fehler beim Abfragen der Daten'));
+                  
+                }
+          
+                
+                return  resolve(results);
+              });
+            
+        } catch (error) {
+            reject(error);
+        }
+     
+    });
+  }
 
 
 
 
+
+
+// Host: node-cron und node-fetch@2 auf server installiern mit Package.json datei 
+
+async function CallApiandInsert(id){
+
+try {
+ 
+var api_id = id + "";
+console.log(api_id)
+
+const fetch = require('node-fetch');
+const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures?id=${api_id}`;
+const options = {
+  method: 'GET',
+  headers: {
+    'X-RapidAPI-Key': '8a2caacbb6msh6f9da5aa04cf7c8p1a5e38jsnb03f15680a30',
+    'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+  }
+};
+
+
+	const response = await fetch(url, options);
+	const result = await response.json();
+
+    var Obejekt ={ id: api_id,
+        home_score: result.response[0].goals.home,
+        away_score: result.response[0].goals.away,
+        penalty: result.response[0].score.penalty.home + " - " + result.response[0].score.penalty.away,
+        home_winner: result.response[0].teams.home.winner,
+        away_winner: result.response[0].teams.away.winner,
+        status: result.response[0].fixture.status.long
+        
+    }
+    insertResult(Obejekt)
+    
+} catch (error) {
+	console.error(error);
+}
+}
+
+
+
+
+
+function insertResult(apiObejekt){
+
+    try {
+
+        const status = apiObejekt.status;
+        console.log(status);
+        if(status != "Match Finished"){
+            console.log("Spiel ist noch nicht zu ende");
+            return;
+        }
+        
+        const id = apiObejekt.id;
+        const home_score = apiObejekt.home_score;
+        const away_score = apiObejekt.away_score;
+        const penalty = apiObejekt.penalty;
+        const home_winner = apiObejekt.home_winner;
+        const away_winner = apiObejekt.away_winner;
+        var ausgang = "null";
+
+        if(home_winner == true){
+             ausgang = "hw";
+        }else if (away_winner == true)
+            {
+                 ausgang = "aw";
+            }else
+            {
+                 ausgang = "nw";
+            }
+     console.log(ausgang);
+
+        const insertQuery =` UPDATE spiele SET home_score = ?, away_score = ?, ausgang = ?, penalty = ? WHERE api_id = ?`;
+
+            db.query(insertQuery, [home_score, away_score, ausgang, penalty, id ], (error, results) => {
+                if (error) {
+                    console.error('Fehler beim Einfügen der Daten:', error);
+                    return res.status(500).send('Fehler beim Einfügen der Daten');
+                }
+
+                console.log("Erfolgreich eingefügt");
+                 return;
+            });
+      
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).send('Unbehandelter Fehler');
+    }
+
+}
+
+async function routineCheck(){
+    try {
+        var ids = await getApiId();
+        if (ids.length < 1){
+            console.log("keine Spiele gefunden")
+            return;
+        }
+        for (var x = 0; x < ids.length; x++) {
+            await CallApiandInsert(ids[x].api_id);
+        }
+        console.log('Routine Check completed successfully.');
+    } catch (error) {
+        console.error('Error in routineCheck:', error);
+    }
+    
+ } 
+
+//  routineCheck()
+
+
+ // Planen der routineCheck für jeden Tag um 01:00 Uhr um die Ergebnisse von EM-Spiele in der Datenbank einzutragen
+/*
+cron.schedule('0 1 * * *', async () => {
+    console.log(`Routine Check started at ${moment().format('YYYY-MM-DD HH:mm:ss')}`);
+    await routineCheck();
+});
+*/
+
+
+/*host*/
 
 module.exports = router;
 

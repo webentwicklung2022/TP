@@ -1,4 +1,6 @@
 // var container = document.getElementsByClassName("container");
+/*Host*/
+
 var cats = ['Gesamt', 'Wöchentlich', 'Täglich']
 var index = 0;
 var cat = cats[index];
@@ -6,7 +8,7 @@ var cat = cats[index];
 function schalter(richtung){
 
   if(richtung == "rechts"){
-    if(index < 2){
+    if(index < cats.length - 1){ /*Host dates.length - 1*/
       index++;
       cat = cats[index]
     }else{
@@ -28,13 +30,13 @@ function schalter(richtung){
   fetchData()
 }
 
-
+/*Host*/
 
 
 async function fetchData() {
     try {
        
-      const response = await fetch("/abfrage/1/" + cat);
+      const response = await fetch("/abfrage/1/" + cat); 
   
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -73,8 +75,10 @@ const table = document.querySelector("#table")
 const listing = document.querySelector(".listing");
 function datenEinfuegen(data){
 table.innerHTML = "";
+
 listing.innerHTML =`<i id="icon" onclick="schalter('links')" class="fa-solid fa-circle-left"></i> <p class="d">${cat}</p> <i id="icon" onclick="schalter('rechts')" class="fa-solid fa-circle-right"></i>`;
-  table.innerHTML += `
+
+table.innerHTML += `
   <tr>
 <th>Platz</th>
 <th>Nickname</th>

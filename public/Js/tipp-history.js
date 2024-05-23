@@ -93,7 +93,8 @@ const flags = [
   { name: "tschechien", url: "../img/flaggen/tschechien.png" },
   { name: "turkei", url: "../img/flaggen/turkei.png" },
   { name: "ukraine", url: "../img/flaggen/ukraine.png" },
-  { name: "ungarn", url: "../img/flaggen/ungarn.png" }
+  { name: "ungarn", url: "../img/flaggen/ungarn.png" },
+  { name: "Fragezeichen", url: "../img/flaggen/Fragezeichen.png" } /*Host*/ 
 ];
 
 function nameToFlag(name) {
@@ -102,7 +103,7 @@ function nameToFlag(name) {
           return flags[x].url;
       }
   }
-  return "Nicht gefunden";
+  return "../img/flaggen/Fragezeichen.png";
 }
 
 

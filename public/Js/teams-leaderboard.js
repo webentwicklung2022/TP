@@ -1,3 +1,4 @@
+
 var cats = ['Gesamt', 'Wöchentlich', 'Täglich']
 var index = 0;
 var cat = cats[index];
@@ -5,7 +6,7 @@ var cat = cats[index];
 function schalter(richtung){
 
   if(richtung == "rechts"){
-    if(index < 2){
+    if(index < cats.length - 1){ /*Host dates.length - 1*/
       index++;
       cat = cats[index]
     }else{
@@ -31,7 +32,7 @@ function schalter(richtung){
 async function fetchData() {
     try {
         
-      const response = await fetch("/abfrage/2/" + cat);
+      const response = await fetch("/abfrage/2/" + cat); 
   
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -42,7 +43,7 @@ async function fetchData() {
       const data = await response.json();
       // Hier kannst du mit den geladenen Daten arbeiten
    
-      console.log(data)
+      
       datenEinfuegen(data);
     } catch (error) {
       console.error('Fetch error:', error);
@@ -67,12 +68,15 @@ toggleBtn.onclick = function (){
 }
 
 const table = document.querySelector("#table")
+
 const listing = document.querySelector(".listing");
 
 function datenEinfuegen(data){
 table.innerHTML = "";
+
 listing.innerHTML =`<i id="icon" onclick="schalter('links')" class="fa-solid fa-circle-left"></i> <p class="d">${cat}</p> <i id="icon" onclick="schalter('rechts')" class="fa-solid fa-circle-right"></i>`;
-  table.innerHTML += `
+ 
+table.innerHTML += `
   <tr>
 <th>Platz</th>
 <th>Team</th>
