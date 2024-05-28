@@ -9,10 +9,24 @@ if (hinweis.innerHTML.trim() !== "") {
     location.href = "/";
   }, 1000); // 1000 Millisekunden = 1 Sekunden
 }
+
+
+
+
+
 /*Host erste Date[0] ist Test-Date muss immer gewünschte Datum sein, um zu testen */ 
 var dates = ['23.05.2024', '14.06.2024', '15.06.2024', '16.06.2024', '17.06.2024', '18.06.2024', '19.06.2024', '20.06.2024', '21.06.2024', '22.06.2024', '23.06.2024', '24.06.2024', '25.06.2024', '26.06.2024']
-var index = 0;
+var index = sessionStorage.getItem("index");
+
+if(index === null){
+  index = 0;
+}
+
+
 var date = dates[index];
+
+
+
 
 function schalter(richtung) {
 
@@ -20,6 +34,7 @@ function schalter(richtung) {
     if (index < dates.length - 1) { /*Host dates.length - 1*/
       index++;
       date = dates[index]
+      sessionStorage.setItem("index", index.toString());
     } else {
       return
     }
@@ -29,6 +44,7 @@ function schalter(richtung) {
     if (index > 0) {
       index--;
       date = dates[index]
+      sessionStorage.setItem("index", index.toString());
     } else {
       return
     }
@@ -73,13 +89,19 @@ function datenEinfuegen(data) {
             <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">${data[x].time.substring(0, 5)} Uhr</div><button  class="tippen_btn"  onclick="tippenPopup(${x})" >Tippen</button></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
           </li>
       `
-    } else {
+    } else if(data[x].home_penalty === "null" && data[x].away_penalty === "null") {
       spiel_plan.innerHTML += `
       <li>
-            <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">Ausgang</div><h3 style="font-size: 1.6rem">${data[x].home_score} - ${data[x].away_score}<h3></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
+            <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">Ausgang</div><h3 style="font-size: 1.6rem">${data[x].home_score} - ${data[x].away_score}</h3></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
           </li>
       `
 
+    }else{
+      spiel_plan.innerHTML += `
+      <li>
+            <div class="home"><img class="home_img" src="${nameToFlag(data[x].home_name)}"><p class="home_name">${GroßSchreiben(data[x].home_name)}</p> </div> <div class="Uhrzeitundbtn"><div class="Uhrzeit">Ausgang</div><h3 style="font-size: 1.6rem">${data[x].home_score} - ${data[x].away_score}</h3><small>P ${data[x].home_penalty} - ${data[x].away_penalty}</small></div> <div class="away"><img class="away_img" src="${nameToFlag(data[x].away_name)}" alt=""> <p class="away_name">${GroßSchreiben(data[x].away_name)}</p><input type="hidden" name="match_id" class="match_id" value="${data[x].id}"></div>
+          </li>
+      `
     }
 
 
@@ -218,7 +240,7 @@ function logout() {
 
 // }
 
-// // fetchData2()
+// fetchData2()
 
 
 // async function fetchData3() {
@@ -244,3 +266,26 @@ function logout() {
 // }
 
 // fetchData3()
+
+
+function isIOS() {
+  const userAgent = window.navigator.userAgent;
+
+  // Überprüfen, ob der userAgent String 'iPhone', 'iPad' oder 'iPod' enthält
+  console.log(userAgent);
+  return /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  if (isIOS()) {
+    var d = document.getElementsByClassName("dropdown_menu");
+    console.log("Der Benutzer verwendet ein iOS-Gerät.");
+    if (d.length > 0) {
+      d[0].style.backgroundColor = "rgba(1, 1, 1, 0.7)"; // Korrigierte Zuweisung
+      d[0].style.backdropFilter = "blur(15px)";
+      d[0].style.webkitBackdropFilter = "blur(15px)";
+    }
+  } else {
+    console.log("Der Benutzer verwendet kein iOS-Gerät.");
+  }
+});

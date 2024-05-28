@@ -114,7 +114,7 @@ font-weight: bold;
 }
 /*Dropmunu*/
 .dropdown_menu{
-  display: none;
+ 
   position:absolute;
   right: 2rem;
   z-index: 100;
@@ -122,10 +122,17 @@ font-weight: bold;
   height: 0;
   width: 300px;
   background: rgba(255, 255, 255, 0.1);  
-  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+backdrop-filter: blur(15px);
+
+
   border-radius: 10px;
   overflow: hidden;
   transition: height .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+ 
+  z-index: 101;
+
+  
 
 }
 
@@ -516,5 +523,10 @@ main #hero #hinweis{
     color: orange;  
     font-weight: bold;
    
+}
+
+small{
+    margin: 0;
+    padding: 0;
 }
 

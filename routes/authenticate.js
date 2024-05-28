@@ -28,7 +28,7 @@ initializePassport(
 
 })
 
- router.get('/Login', checkNotAuthenticated, (req, res) => {
+ router.get('/login', checkNotAuthenticated, (req, res) => {
 
     try {
         // Achtung vor SQL-Injection! Verwende Parameterisierte Abfragen.
@@ -54,7 +54,7 @@ initializePassport(
        
     }
     
-    return res.render("Login");
+    return res.render("login");
 });
 
 
@@ -68,14 +68,34 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
         const email = req.body.email;
         const password = await bcrypt.hash(req.body.password, 10);
         const punkte = 0;
-        const team_id = req.body.team_id;
+        
+        const championship = req.body.championship;
+
+        if(championship === "Team auswählen"){
+            return res.render("register", { message: "Bitte ein Mannschaft auswählen" });
+        }
+
         const nickname = req.body.nickname;
         const vorname = req.body.vorname;
         const nachname = req.body.nachname;
+        const uservalidation = await getTeamId(vorname , nachname);
+        const uservalidation_id = uservalidation.id;
+        const team_id = uservalidation.team_id;
+
+        if(uservalidation === "null"){
+            return res.render("register", { message: "Vorname oder Nachname sind falsch" });
+        }
+
+        if(uservalidation === "null1"){
+            return res.render("register", { message: "Name ist bereits registriert" });
+        }
 
         const selectQuery = "SELECT email FROM users WHERE email = ?";
         const selectQuery2 = "SELECT nickname FROM users WHERE nickname = ?";
-        const insertQuery = "INSERT INTO users (email, punkte, password, team_id, nickname, vorname, nachname) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        const insertQuery = "INSERT INTO users (email, punkte, password, team_id, nickname , championship , uservalidation_id ) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        console.log(championship);
+        console.log(uservalidation_id + " " + team_id);
 
         console.log('Ausgeführter Befehl:', selectQuery);
 
@@ -102,14 +122,14 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
                     return res.render("register", { message: "Nickname zu lang (Max 15 Zeichen)" });
                 }
 
-                db.query(insertQuery, [email, punkte, password, team_id, nickname, vorname, nachname], (error, results) => {
+                db.query(insertQuery, [email, punkte, password, team_id, nickname, championship, uservalidation_id ], (error, results) => {
                     if (error) {
                         console.error('Fehler beim Einfügen der Daten:', error);
                         return res.status(500).send('Fehler beim Einfügen der Daten');
                     }
 
                     console.log("Erfolgreich eingefügt");
-                    res.redirect('/login');
+                    res.render('login' , {msg: "Die Registrierung war erfolgreich"});
                 });
             });
         });
@@ -126,12 +146,21 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
 router.post('/login' ,passport.authenticate('local', {
     successRedirect: '/pre',
     failureRedirect: '/login',
-    failureFlash: ' E-mail oder password ist falsch.',
+    failureFlash: ' E-Mail oder Passwort ist falsch.',
     successFlash: 'Login successful!'
 }));
 
 
-router.get('/pre', (req, res) => {
+router.get('/pre', checkAuthenticated, (req, res) => {
+   
+    try {
+
+
+        if(decipher(req) !== null){
+            console.log("du darfst das nicht")
+          return res.redirect("/");
+        }
+       
     const user = req.user.id + "," + req.user.email  + "," + req.user.nickname +  "," + req.user.punkte  +  "," + req.user.team_id;
     const crypto = require('crypto');
 
@@ -151,10 +180,17 @@ router.get('/pre', (req, res) => {
     res.cookie('iv', iv.toString('hex'), { httpOnly: true});
     
     res.redirect("/");
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+    
 });
 
 
 function checkAuthenticated(req, res, next){
+    
     if(req.isAuthenticated()){
         return next()
     }
@@ -180,30 +216,83 @@ function checkNotAuthenticated(req, res, next){
      next()
 }
 
-function decipher(req){
+function decipher(req,res){
 
-    const crypto = require('crypto');
-    // Cookie mit dem Namen "userId" abrufen
-    const encryptedUser = req.cookies.pre;
-    const ivHex = req.cookies.iv;
+    try {
+        const crypto = require('crypto');
+        // Cookie mit dem Namen "userId" abrufen
+        const encryptedUser = req.cookies.pre;
+        const ivHex = req.cookies.iv;
+    
+        // Überprüfen, ob das Cookie vorhanden ist
+        if (encryptedUser && ivHex) {
+            // Schlüssel und IV wiederherstellen
+            const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
+            const iv = Buffer.from(ivHex, 'hex');
+    
+            // Text entschlüsseln
+            const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+            let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
+            decrypted += decipher.final('utf8');
+    
+            // Entschlüsselte Benutzer-ID im Response anzeigen
+           return decrypted;
+        } else {
+          return null;
+        }  
+        
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).send('Unbehandelter Fehler');
+    }
 
-    // Überprüfen, ob das Cookie vorhanden ist
-    if (encryptedUser && ivHex) {
-        // Schlüssel und IV wiederherstellen
-        const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
-        const iv = Buffer.from(ivHex, 'hex');
-
-        // Text entschlüsseln
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
-        decrypted += decipher.final('utf8');
-
-        // Entschlüsselte Benutzer-ID im Response anzeigen
-       return decrypted;
-    } else {
-      return null;
-    }  
+  
 }
+
+
+
+
+
+async function getTeamId(vorname, nachname) {
+    // Dies ist ein Platzhalter für eine echte Datenbankabfrage.
+   
+    const befehl = `SELECT id , team_id, logged FROM uservalidation where vorname = ? and nachname = ?`;
+  
+    return new Promise((resolve, reject) => {
+
+        try {
+            db.query(befehl, [vorname, nachname] , (error, results) => {
+                if (error) {
+                  console.error('Fehler beim Abfragen der Daten:', error);
+                  return; reject(new Error('Fehler beim Abfragen der Daten'));
+                  
+                }
+
+           if (results.length === 0) {
+                    return resolve("null"); // Keine ID gefunden, also null zurückgeben
+                }
+
+                if (results[0].logged === 1) {
+                    return resolve("null1"); // Keine ID gefunden, also null zurückgeben
+                }    
+                
+                return  resolve(results[0]);
+              });
+            
+        } catch (error) {
+            reject(error);
+        }
+     
+    });
+  }
+
+async function test(){
+    const t = await getTeamId("Mahmoud","Khalaf");
+
+    console.log(t)
+ 
+}
+test()
 
 
 module.exports = router;

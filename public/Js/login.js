@@ -19,3 +19,13 @@ if (toggle) {
 
 
 }
+
+const hinweis = document.querySelector("#hinweis");
+
+
+if (hinweis.innerHTML.trim() !== "") {
+  setTimeout(() => {
+    // Innerhalb der setTimeout-Funktion solltest du keine direkte Rückgabe verwenden
+    location.href = "/login";
+  }, 1000); // 1000 Millisekunden = 1 Sekunden
+}

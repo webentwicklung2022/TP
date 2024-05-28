@@ -18,19 +18,34 @@ const db = mysql.createConnection({
 
 router.get('/',  checkAuthenticated, async (req, res) => {
 
-    const user = decipher(req).split(',');
- 
-    res.render("home", { nickname: user[2] });
+    try {
+        const user = decipher(req).split(',');
+        res.render("home", { nickname: user[2] });
+        
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.send('Unbehandelter Fehler');
+    }
+
 
 
 });
 
 function checkAuthenticated(req, res, next) {
-    if (decipher(req) !== null) {
-        return next()
-    }
 
-    res.redirect('/login')
+    try {
+        if (decipher(req) !== null && decipher(req).split(',').length === 5) {
+        
+            return next();
+        }
+    
+        res.redirect('/login');
+        
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.send('Unbehandelter Fehler');
+    }
+    
 }
 
 
@@ -228,7 +243,7 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
                 befehl = "SELECT home_team, away_team, home_score, away_score, status from tipp where user_id =" + user_Id;
                 break;
             case "4":
-                befehl = "SELECT id, home_name, away_name, date, time, ausgang, home_score, away_score from spiele where date = '" + werte + "'";  /*Host ausgang, home_score, away_score*/
+                befehl = "SELECT id, home_name, away_name, date, time, ausgang, home_score, away_score , home_penalty, away_penalty from spiele where date = '" + werte + "'";  /*Host ausgang, home_score, away_score*/
                 break;
             default:
                 befehl = "SELECT * FROM team";
@@ -268,12 +283,12 @@ router.post('/tipp', checkAuthenticated, async (req, res) => {
 
         console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date)
 
-        /*Host*/
+      
         const result = await getDateTimeByMatchId(match_id);
         if(checkDateAndTime(result.date, result.time)){
             return res.render("home", { message: "Tippzeit abgelaufen" });
         }
-         /*Host*/
+     
 
         const selectQuery = "SELECT match_id FROM tipp WHERE match_id = ? and user_id = ?";
         const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
@@ -312,29 +327,38 @@ router.post('/tipp', checkAuthenticated, async (req, res) => {
 
 
 
-function decipher(req) {
+function decipher(req,res){
 
-    const crypto = require('crypto');
-    // Cookie mit dem Namen "userId" abrufen
-    const encryptedUser = req.cookies.pre;
-    const ivHex = req.cookies.iv;
-
-    // Überprüfen, ob das Cookie vorhanden ist
-    if (encryptedUser && ivHex) {
-        // Schlüssel und IV wiederherstellen
-        const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
-        const iv = Buffer.from(ivHex, 'hex');
-
-        // Text entschlüsseln
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
-        decrypted += decipher.final('utf8');
-
-        // Entschlüsselte Benutzer-ID im Response anzeigen
-        return decrypted;
-    } else {
-        return null;
+    try {
+        const crypto = require('crypto');
+        // Cookie mit dem Namen "userId" abrufen
+        const encryptedUser = req.cookies.pre;
+        const ivHex = req.cookies.iv;
+    
+        // Überprüfen, ob das Cookie vorhanden ist
+        if (encryptedUser && ivHex) {
+           
+            // Schlüssel und IV wiederherstellen
+            const key = crypto.scryptSync('@MemorySpiel24', 'salt', 32); // Schlüssel muss mit dem übereinstimmen, der bei der Verschlüsselung verwendet wurde
+            const iv = Buffer.from(ivHex, 'hex');
+    
+            // Text entschlüsseln
+            const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+            let decrypted = decipher.update(encryptedUser, 'hex', 'utf8');
+            decrypted += decipher.final('utf8');
+    
+            // Entschlüsselte Benutzer-ID im Response anzeigen
+           return decrypted;
+        } else {
+          return null;
+        }  
+        
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.send('Unbehandelter Fehler');
     }
+
+  
 }
 
  
@@ -464,7 +488,8 @@ const options = {
     var Obejekt ={ id: api_id,
         home_score: result.response[0].goals.home,
         away_score: result.response[0].goals.away,
-        penalty: result.response[0].score.penalty.home + " - " + result.response[0].score.penalty.away,
+        home_penalty: result.response[0].score.penalty.home,
+        away_penalty: result.response[0].score.penalty.away,
         home_winner: result.response[0].teams.home.winner,
         away_winner: result.response[0].teams.away.winner,
         status: result.response[0].fixture.status.long
@@ -495,11 +520,12 @@ function insertResult(apiObejekt){
         const id = apiObejekt.id;
         const home_score = apiObejekt.home_score;
         const away_score = apiObejekt.away_score;
-        const penalty = apiObejekt.penalty;
+        const home_penalty =  String(apiObejekt.home_penalty);
+        const away_penalty = String(apiObejekt.away_penalty);
         const home_winner = apiObejekt.home_winner;
         const away_winner = apiObejekt.away_winner;
         var ausgang = "null";
-
+        console.log(home_penalty + " - " + away_penalty)
         if(home_winner == true){
              ausgang = "hw";
         }else if (away_winner == true)
@@ -511,9 +537,9 @@ function insertResult(apiObejekt){
             }
      console.log(ausgang);
 
-        const insertQuery =` UPDATE spiele SET home_score = ?, away_score = ?, ausgang = ?, penalty = ? WHERE api_id = ?`;
+        const insertQuery =` UPDATE spiele SET home_score = ?, away_score = ?, ausgang = ?, home_penalty = ? , away_penalty = ? WHERE api_id = ?`;
 
-            db.query(insertQuery, [home_score, away_score, ausgang, penalty, id ], (error, results) => {
+            db.query(insertQuery, [home_score, away_score, ausgang, home_penalty, away_penalty, id ], (error, results) => {
                 if (error) {
                     console.error('Fehler beim Einfügen der Daten:', error);
                     return res.status(500).send('Fehler beim Einfügen der Daten');
