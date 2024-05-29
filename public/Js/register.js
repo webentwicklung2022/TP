@@ -55,38 +55,6 @@ const select_box__current = document.querySelector(".select-box__current");
 const select_box__list = document.querySelector(".select-box__list");
 
 
-var s1 = `<div class="select-box__value">
-<input class="select-box__input" type="radio" id="1" value="3" name="team_id"
-    checked="checked" />
-<p class="select-box__input-text">Klinge</p>
-</div>
-<div class="select-box__value">
-<input class="select-box__input" type="radio" id="2" value="4" name="team_id"
-    checked="checked" />
-<p class="select-box__input-text">OTM</p>
-</div>
-<div class="select-box__value">
-<input class="select-box__input" type="radio" id="3" value="5" name="team_id"
-    checked="checked" />
-<p class="select-box__input-text">Rest</p>
-</div>
-<div class="select-box__value">
-<input class="select-box__input" type="radio" id="4" value="5" name="team_id"
-    checked="checked" />
-<p class="select-box__input-text">Team auswählen</p>
-</div><img class="select-box__icon" src="http://cdn.onlinewebfonts.com/svg/img_295694.svg"
-alt="Arrow Icon" aria-hidden="true" />`;
-
-
-var s2 = `<li>
-<label class="select-box__option" for="1" aria-hidden="aria-hidden">Klinge</label>
-</li>
-<li>
-<label class="select-box__option" for="2" aria-hidden="aria-hidden">OTM</label>
-</li>
-<li>
-<label class="select-box__option" for="3" aria-hidden="aria-hidden">Rest</label>
-</li>`;
 
 
 

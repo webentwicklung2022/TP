@@ -29,11 +29,17 @@ a{
     text-decoration: none;
     color: #fff;
     font-size: 1rem;
-
+    transition-duration: 200ms;
 }
 
 a:hover{
     color: orange;
+}
+
+a:active{
+    transform: scaleX(1.01);
+    letter-spacing: 2px;
+    filter: brightness(1.1);
 }
 
 /*header*/
@@ -97,17 +103,15 @@ font-weight: bold;
     font-size: 0.8rem;
     font-weight: bold;
     cursor: pointer;
-    transition: scale .2 ease;
+    transition-duration: 200ms;
 }
 
-.action_btn:hover{
-    scale: 1.05;
-    color: #fff;
 
-}
 
 .action_btn:active{
-    scale: 0.95;
+    transform: scaleX(1.03);
+    letter-spacing: 2px;
+    filter: brightness(1.1);
 
 }
 /*Dropmunu*/

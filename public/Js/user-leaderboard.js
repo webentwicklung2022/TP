@@ -1,7 +1,7 @@
 // var container = document.getElementsByClassName("container");
 /*Host*/
 
-var cats = ['Gesamt', 'Wöchentlich', 'Täglich']
+var cats = ['Gesamt', 'Woche','Gestern', 'Heute']
 var index = 0;
 var cat = cats[index];
 

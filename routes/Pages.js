@@ -172,7 +172,7 @@ router.get('/table', checkAuthenticated, (req, res) => {
 });
 
 
-
+/*Host die Änderung*/ 
 router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
 
     try {
@@ -183,14 +183,14 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
         const user = decipher(req).split(',');
         const user_Id = user[0];
 
-     
+  
         switch (befehl) {
             case "1":
                  /*Host*/
                 if(werte == "Gesamt"){
                     befehl = "SELECT punkte, nickname FROM users WHERE punkte != 0 order by punkte desc";
                     break;
-                }else if(werte  == "Wöchentlich"){
+                }else if(werte  == "Woche"){
                     befehl = `SELECT SUM(tipp.recived_points) AS punkte, users.nickname AS nickname
                     FROM users
                     JOIN tipp ON users.id = tipp.user_id
@@ -199,6 +199,15 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
                     HAVING SUM(tipp.recived_points) > 0  -- Having clause to filter users with points only
                     ORDER BY SUM(tipp.recived_points) DESC;
                     `;
+                    break;
+                }else if(werte  == "Gestern"){
+                    befehl = `SELECT SUM(tipp.recived_points) AS punkte, users.nickname AS nickname
+                    FROM users
+                    JOIN tipp ON users.id = tipp.user_id
+                    WHERE tipp.recive_date > CURRENT_DATE - INTERVAL '1' DAY AND tipp.recive_date < CURRENT_DATE 
+                    GROUP BY tipp.user_id, users.nickname
+                    HAVING SUM(tipp.recived_points) > 0  -- Having clause to filter users with points only
+                    ORDER BY SUM(tipp.recived_points) DESC;`;
                     break;
                 }else{
                     befehl = `SELECT SUM(tipp.recived_points) AS punkte, users.nickname AS nickname
@@ -211,18 +220,28 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
                     `;
                     break;
                 }
-                 /*Host*/
+                 
             case "2":
-                 /*Host*/
+               
                 if(werte == "Gesamt"){
                     befehl = "SELECT team.name as name, sum(users.punkte) as punkte FROM users join team on users.team_id = team.id WHERE punkte != 0 group by team.name order by punkte desc";
                     break;
-                }else if(werte  == "Wöchentlich"){
+                }else if(werte  == "Woche"){
                     befehl = `SELECT team.name AS name, SUM(tipp.recived_points) AS punkte
                     FROM users
                     JOIN team ON users.team_id = team.id
                     JOIN tipp ON users.id = tipp.user_id
                     WHERE tipp.recive_date >= CURRENT_DATE - INTERVAL '7' DAY
+                    GROUP BY team.name
+                    HAVING SUM(tipp.recived_points) > 0
+                    ORDER BY punkte DESC;`;
+                    break;
+                }else if(werte  == "Gestern"){
+                    befehl = `SELECT team.name AS name, SUM(tipp.recived_points) AS punkte
+                    FROM users
+                    JOIN team ON users.team_id = team.id
+                    JOIN tipp ON users.id = tipp.user_id
+                    WHERE tipp.recive_date > CURRENT_DATE - INTERVAL '1' DAY AND tipp.recive_date < CURRENT_DATE 
                     GROUP BY team.name
                     HAVING SUM(tipp.recived_points) > 0
                     ORDER BY punkte DESC;`;
@@ -238,13 +257,17 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
                      order by punkte desc`;
                     break;
                 }
-                 /*Host*/
+            
             case "3":
-                befehl = "SELECT home_team, away_team, home_score, away_score, status from tipp where user_id =" + user_Id;
+                befehl = "SELECT home_abbr, away_abbr, home_score, away_score, status, match_date from tipp where user_id =" + user_Id;
                 break;
             case "4":
                 befehl = "SELECT id, home_name, away_name, date, time, ausgang, home_score, away_score , home_penalty, away_penalty from spiele where date = '" + werte + "'";  /*Host ausgang, home_score, away_score*/
                 break;
+                case "5":
+                    befehl = "SELECT `match_id` FROM tipp WHERE user_id = '" + user_Id + "'"; 
+                    break;
+                    
             default:
                 befehl = "SELECT * FROM team";
         }
@@ -266,7 +289,8 @@ router.get('/abfrage/:befehl/:werte', checkAuthenticated, (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
-
+/*Host*/ 
+/*Host*/ 
 router.post('/tipp', checkAuthenticated, async (req, res) => {
 
     try {
@@ -274,14 +298,14 @@ router.post('/tipp', checkAuthenticated, async (req, res) => {
         const user_Id = user[0];
         const match_id = req.body.match_id;
         const match_date = req.body.match_date;
-        const home_team = req.body.home_team;
-        const away_team = req.body.away_team;
+        const home_abbr = req.body.home_abbr;
+        const away_abbr = req.body.away_abbr;
         const home_score = req.body.home_score;
         const away_score = req.body.away_score;
         const status = "offen";
         const recive_date = "null";
 
-        console.log(user_Id + " " + match_id + " " + match_date + " " + home_team + " " + away_team + " " + home_score + " " + away_score + " " + status + " " + recive_date)
+        console.log(user_Id + " " + match_id + " " + match_date + " " + home_abbr + " " + away_abbr + " " + home_score + " " + away_score + " " + status + " " + recive_date)
 
       
         const result = await getDateTimeByMatchId(match_id);
@@ -291,7 +315,7 @@ router.post('/tipp', checkAuthenticated, async (req, res) => {
      
 
         const selectQuery = "SELECT match_id FROM tipp WHERE match_id = ? and user_id = ?";
-        const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
+        const insertQuery = "INSERT INTO tipp (user_Id, match_id, match_date, home_abbr, away_abbr, home_score, away_score, status, recive_date ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
         console.log('Ausgeführter Befehl:', selectQuery);
 
@@ -305,7 +329,7 @@ router.post('/tipp', checkAuthenticated, async (req, res) => {
                 return res.render("home", { message: "Bereits getippt" });
             }
 
-            db.query(insertQuery, [user_Id, match_id, match_date, home_team, away_team, home_score, away_score, status, recive_date], (error, results) => {
+            db.query(insertQuery, [user_Id, match_id, match_date, home_abbr, away_abbr, home_score, away_score, status, recive_date], (error, results) => {
                 if (error) {
                     console.error('Fehler beim Einfügen der Daten:', error);
                     return res.status(500).send('Fehler beim Einfügen der Daten');
@@ -322,8 +346,54 @@ router.post('/tipp', checkAuthenticated, async (req, res) => {
 
 
 });
+/*Host*/ 
+
+/*Host*/ 
+router.post('/tippaendern', checkAuthenticated, async (req, res) => {
+
+    try {
+        const user = decipher(req).split(',');
+        const user_Id = user[0];
+        const match_id = req.body.match_id;
+        const home_score = req.body.home_score;
+        const away_score = req.body.away_score;
+        
+
+       
+
+      
+        const result = await getDateTimeByMatchId(match_id);
+        if(checkDateAndTime(result.date, result.time)){
+            return res.render("home", { message: "Tippzeit abgelaufen" });
+        }
+     
+
+       
+        const insertQuery = "UPDATE tipp SET home_score = ?, away_score = ? WHERE user_Id = ? AND match_id = ? ";
 
 
+
+
+
+            db.query(insertQuery, [ home_score, away_score, user_Id, match_id], (error, results) => {
+                if (error) {
+                    console.error('Fehler beim Einfügen der Daten:', error);
+                    return res.status(500).send('Fehler beim Einfügen der Daten');
+                }
+
+                console.log("Erfolgreich geändert");
+                res.redirect('/');
+            });
+       
+    } catch (error) {
+        console.error('Unbehandelter Fehler:', error);
+        res.status(500).send('Unbehandelter Fehler');
+    }
+
+
+});
+
+/*Host*/ 
 
 
 
@@ -389,7 +459,7 @@ async function getDateTimeByMatchId(match_id) {
     });
   }
 
-/*HOST ÄNDERUNG EINFÜGEN*/
+
   function checkDateAndTime(date , time) {
     const now = new Date();
 
@@ -418,7 +488,7 @@ async function getDateTimeByMatchId(match_id) {
         return false;
     }
 }
-/*HOST*/
+
 
 
 function convertToDate(dateString) {
@@ -430,7 +500,7 @@ function convertToDate(dateString) {
 }
 
 
-/*HOST*/
+
 async function getApiId() {
     // Dies ist ein Platzhalter für eine echte Datenbankabfrage.
    
@@ -462,7 +532,7 @@ async function getApiId() {
 
 
 
-// Host: node-cron und node-fetch@2 auf server installiern mit Package.json datei 
+
 
 async function CallApiandInsert(id){
 

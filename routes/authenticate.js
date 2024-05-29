@@ -62,7 +62,7 @@ router.get('/register', checkNotAuthenticated, (req, res) => {
 
     return res.render("register");
 });
-
+/*Host*/ 
 router.post('/register', checkNotAuthenticated, async (req, res) => {
     try {
         const email = req.body.email;
@@ -139,7 +139,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     }
 });
 
-
+/*Host*/ 
 
 
 
@@ -252,6 +252,7 @@ function decipher(req,res){
 
 
 
+/*Host*/ 
 
 async function getTeamId(vorname, nachname) {
     // Dies ist ein Platzhalter für eine echte Datenbankabfrage.
@@ -285,6 +286,7 @@ async function getTeamId(vorname, nachname) {
      
     });
   }
+/*Host*/ 
 
 async function test(){
     const t = await getTeamId("Mahmoud","Khalaf");
