@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="css/start.css">
+  <title>Start</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="logo"><a href="/start"><img class="logo" src="../img/V2.png" alt=""></a>
+      <div id="hinweis">{{msg}}</div>
+    </div>
+
+    <div class="form-box">
+      <img style="height: 50px;" src="icons/info.svg" alt="">
+      <h3>Anleitung Tippspiel</h3>
+
+      Willkommen zu unserem Tippspiel zur Europameisterschaft 2024.
+
+      <ul>
+        <li>Die Seite ausschließlich im Vertikalen (Hochkant)-Format nutzen!!</li>
+        <li>Getippt wird durch ein Tippen auf den „Tippen“-Button.</li>
+        <img class="anleitung" src="../img/Anleitung-img/Tippen.png">
+        <li>Tipps sind bis zu 30 Minuten vor spielebeginn anpassbar.
+          Danach ist weder Tippen noch ändern möglich.</li>
+        <li>Über die Pfeile kann man das Datum ändern.</li>
+        <img class="anleitung" src="../img/Anleitung-img/Schalter.png">
+        <li>Durch tippen auf das Spiel im Tipp-verlauf kann man direkt zum Spiel springen.</li>
+        <img class="anleitung" src="../img/Anleitung-img/Tippverlauf.png">
+        <li> Punkteverteilung: 3 Punkte für das Richtige Ergebnis (Punktestand). 
+          1 Punkt für den Richtigen Ausgang (Sieger
+          und Verlierer bzw. Unentschieden).<br> 
+          0 Punkte für ein falsche getipptes Ergebnis.</li>
+        <li>Die Punkte werden jeden Tag spätestens um 23:59 verteilt.</li>
+        <li>Im Tippverlauf kann man den Status des Spiels sehen. Offen = es wurden noch keine Punkte vergeben.<br>
+          Erledigt = Punkte wurden, falls der Tipp richtig war, vergeben.</li>
+        <li>Über das Kontaktformular sind wir im Bezug auf Probleme oder Feedback erreichbar.</li>
+      </ul>
+    </div>
+    <button class="start_btn" onclick="toHome()">Los gehts</button>
+    <footer><small>&copy; Copyright 2024, Vincenzo, Lamanuzzi & Mahmoud, Khalaf</small></footer>
+    <script src="../Js/start.js"></script>
+</body>
+
+</html>

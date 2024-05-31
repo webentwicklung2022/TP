@@ -1,0 +1,8 @@
+HOST Notizen:neue Spalte (active) in team-Tabelle mit Trigger bei users, die der Aktiven Team-Mitliedern zahlt.
+in Abfrage für Gesamt für Gruppen-Leaderboard round(sum(punkte)) / active
+
+date Spalte in Tipp, auch das tipp-Befehl und tippaendern-Befehl
+
+Start seite erstellen hbs & js & css, img hoch laden und Icon svg routing erstellen für start 
+und alle logo sollen zu start und nach dem anmelden sollen man bei start landen.
+ 

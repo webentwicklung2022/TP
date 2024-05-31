@@ -179,7 +179,7 @@ router.get('/pre', checkAuthenticated, (req, res) => {
     res.cookie('pre', encrypted, { httpOnly: true});
     res.cookie('iv', iv.toString('hex'), { httpOnly: true});
     
-    res.redirect("/");
+    res.redirect("/start");
         
     } catch (error) {
         console.log(error)
