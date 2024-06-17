@@ -561,7 +561,7 @@ async function CallApiandInsert(id) {
         const options = {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Key': '8a2caacbb6msh6f9da5aa04cf7c8p1a5e38jsnb03f15680a30',
+                'X-RapidAPI-Key': 'apiKey',
                 'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
             }
         };
